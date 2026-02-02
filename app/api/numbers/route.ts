@@ -41,7 +41,7 @@ export async function GET(request: Request) {
       .populate("categoryId")
       .sort({ createdAt: -1 });
 
-    let filteredNumbers = numbers.map((num) => ({
+    let filteredNumbers = numbers.map((num: any) => ({
       _id: num._id,
       number: num.number,
       price: num.price,
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
             _id: cat._id,
             name: cat.name,
           }))
-        : num.categoryId
+        : num.categoryId && typeof num.categoryId === 'object' && 'name' in num.categoryId
         ? [{ _id: num.categoryId._id, name: num.categoryId.name }]
         : [],
       status: num.status,
