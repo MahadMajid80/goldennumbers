@@ -187,7 +187,13 @@ const Header = () => {
           <div className="flex flex-col h-full">
             {/* Header with close button */}
             <div className="flex items-center justify-between p-4 border-b border-gray-800">
-              <h2 className="text-white font-bold text-lg">Menu</h2>
+              <Image
+                src="/Golden numbers Hub Logo White  (1).png"
+                alt="Golden Numbers Logo"
+                width={120}
+                height={60}
+                className="object-contain h-8"
+              />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-white hover:text-[#FFD700] transition-colors"
