@@ -4,7 +4,15 @@ import Number from "@/models/Number";
 
 export async function GET(request: Request) {
   try {
-    await connectDB();
+    try {
+      await connectDB();
+    } catch (dbError) {
+      console.error("Database connection error:", dbError);
+      return NextResponse.json(
+        { error: "Database connection failed", details: process.env.NODE_ENV === "development" ? String(dbError) : undefined },
+        { status: 500 }
+      );
+    }
 
     const { searchParams } = new URL(request.url);
     const network = searchParams.get("network");
@@ -78,7 +86,10 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Error fetching numbers:", error);
     return NextResponse.json(
-      { error: "Failed to fetch numbers" },
+      { 
+        error: "Failed to fetch numbers",
+        details: process.env.NODE_ENV === "development" ? String(error) : undefined
+      },
       { status: 500 }
     );
   }
