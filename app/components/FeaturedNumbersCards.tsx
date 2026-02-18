@@ -93,9 +93,15 @@ const FeaturedNumbersCards = () => {
     try {
       const response = await fetch("/api/numbers?featuredNumber=true");
       const data = await response.json();
-      setFeaturedNumbers(data);
+      if (data.error) {
+        console.error("Error fetching featured numbers:", data.error);
+        setFeaturedNumbers([]);
+      } else {
+        setFeaturedNumbers(Array.isArray(data) ? data : []);
+      }
     } catch (error) {
       console.error("Error fetching featured numbers:", error);
+      setFeaturedNumbers([]);
     } finally {
       setLoading(false);
     }

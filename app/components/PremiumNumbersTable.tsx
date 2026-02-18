@@ -35,9 +35,15 @@ const PremiumNumbersTable = () => {
     try {
       const response = await fetch("/api/numbers?premiumNumber=true");
       const data = await response.json();
-      setPremiumNumbers(data);
+      if (data.error) {
+        console.error("Error fetching premium numbers:", data.error);
+        setPremiumNumbers([]);
+      } else {
+        setPremiumNumbers(Array.isArray(data) ? data : []);
+      }
     } catch (error) {
       console.error("Error fetching premium numbers:", error);
+      setPremiumNumbers([]);
     } finally {
       setLoading(false);
     }

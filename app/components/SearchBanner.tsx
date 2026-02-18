@@ -81,9 +81,15 @@ const SearchBanner = ({
     try {
       const response = await fetch("/api/numbers");
       const data = await response.json();
-      setAllNumbers(data);
+      if (data.error) {
+        console.error("Error fetching numbers:", data.error);
+        setAllNumbers([]);
+      } else {
+        setAllNumbers(Array.isArray(data) ? data : []);
+      }
     } catch (error) {
       console.error("Error fetching numbers:", error);
+      setAllNumbers([]);
     }
   };
 

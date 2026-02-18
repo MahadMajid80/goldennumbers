@@ -52,12 +52,20 @@ const OurPackages = () => {
       const response = await fetch("/api/numbers");
       const allNumbers = await response.json();
       
+      if (allNumbers.error) {
+        console.error("Error fetching numbers:", allNumbers.error);
+        setNumbers([]);
+        return;
+      }
+      
+      const numbers = Array.isArray(allNumbers) ? allNumbers : [];
+      
       if (selectedPackage === "all") {
-        setNumbers(allNumbers);
+        setNumbers(numbers);
       } else if (selectedPackage === "penta" || selectedPackage === "hexa") {
         const categoryName = selectedPackage === "penta" ? "Penta" : "Hexa";
-        const filtered = allNumbers.filter((num: NumberItem) =>
-          num.categoryId.some((cat) => cat.name === categoryName)
+        const filtered = numbers.filter((num: NumberItem) =>
+          num.categoryId?.some((cat) => cat.name === categoryName)
         );
         setNumbers(filtered);
       } else {

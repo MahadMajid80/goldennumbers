@@ -63,9 +63,15 @@ const FeaturedNumbersList = ({
     try {
       const response = await fetch("/api/numbers");
       const data = await response.json();
-      setNumbers(data);
+      if (data.error) {
+        console.error("Error fetching numbers:", data.error);
+        setNumbers([]);
+      } else {
+        setNumbers(Array.isArray(data) ? data : []);
+      }
     } catch (error) {
       console.error("Error fetching numbers:", error);
+      setNumbers([]);
     } finally {
       setLoading(false);
     }
@@ -75,9 +81,15 @@ const FeaturedNumbersList = ({
     try {
       const response = await fetch("/api/categories");
       const data = await response.json();
-      setCategories(data);
+      if (data.error) {
+        console.error("Error fetching categories:", data.error);
+        setCategories([]);
+      } else {
+        setCategories(Array.isArray(data) ? data : []);
+      }
     } catch (error) {
       console.error("Error fetching categories:", error);
+      setCategories([]);
     }
   };
 
