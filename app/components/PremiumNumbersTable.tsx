@@ -34,9 +34,12 @@ const PremiumNumbersTable = () => {
   const fetchPremiumNumbers = async () => {
     try {
       const response = await fetch("/api/numbers?premiumNumber=true");
+      if (!response.ok) {
+        console.error("API response not OK:", response.status, response.statusText);
+      }
       const data = await response.json();
       if (data.error) {
-        console.error("Error fetching premium numbers:", data.error);
+        console.error("Error fetching premium numbers:", data.error, data.details ? `Details: ${data.details}` : "");
         setPremiumNumbers([]);
       } else {
         setPremiumNumbers(Array.isArray(data) ? data : []);

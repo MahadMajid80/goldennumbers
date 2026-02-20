@@ -62,9 +62,12 @@ const FeaturedNumbersList = ({
   const fetchNumbers = async () => {
     try {
       const response = await fetch("/api/numbers");
+      if (!response.ok) {
+        console.error("API response not OK:", response.status, response.statusText);
+      }
       const data = await response.json();
       if (data.error) {
-        console.error("Error fetching numbers:", data.error);
+        console.error("Error fetching numbers:", data.error, data.details ? `Details: ${data.details}` : "");
         setNumbers([]);
       } else {
         setNumbers(Array.isArray(data) ? data : []);
@@ -80,9 +83,12 @@ const FeaturedNumbersList = ({
   const fetchCategories = async () => {
     try {
       const response = await fetch("/api/categories");
+      if (!response.ok) {
+        console.error("API response not OK:", response.status, response.statusText);
+      }
       const data = await response.json();
       if (data.error) {
-        console.error("Error fetching categories:", data.error);
+        console.error("Error fetching categories:", data.error, data.details ? `Details: ${data.details}` : "");
         setCategories([]);
       } else {
         setCategories(Array.isArray(data) ? data : []);

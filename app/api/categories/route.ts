@@ -8,8 +8,9 @@ export async function GET() {
       await connectDB();
     } catch (dbError) {
       console.error("Database connection error:", dbError);
+      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
       return NextResponse.json(
-        { error: "Database connection failed", details: process.env.NODE_ENV === "development" ? String(dbError) : undefined },
+        { error: "Database connection failed", details: errorMessage },
         { status: 500 }
       );
     }
@@ -21,10 +22,11 @@ export async function GET() {
     return NextResponse.json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       { 
         error: "Failed to fetch categories",
-        details: process.env.NODE_ENV === "development" ? String(error) : undefined
+        details: errorMessage
       },
       { status: 500 }
     );

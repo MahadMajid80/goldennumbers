@@ -92,9 +92,12 @@ const FeaturedNumbersCards = () => {
   const fetchFeaturedNumbers = async () => {
     try {
       const response = await fetch("/api/numbers?featuredNumber=true");
+      if (!response.ok) {
+        console.error("API response not OK:", response.status, response.statusText);
+      }
       const data = await response.json();
       if (data.error) {
-        console.error("Error fetching featured numbers:", data.error);
+        console.error("Error fetching featured numbers:", data.error, data.details ? `Details: ${data.details}` : "");
         setFeaturedNumbers([]);
       } else {
         setFeaturedNumbers(Array.isArray(data) ? data : []);
