@@ -50,10 +50,18 @@ const OurPackages = () => {
     setLoading(true);
     try {
       const response = await fetch("/api/numbers");
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+        console.error("Error fetching numbers:", errorData.error, errorData.details ? `Details: ${errorData.details}` : "");
+        setNumbers([]);
+        return;
+      }
+
       const allNumbers = await response.json();
       
       if (allNumbers.error) {
-        console.error("Error fetching numbers:", allNumbers.error);
+        console.error("Error fetching numbers:", allNumbers.error, allNumbers.details ? `Details: ${allNumbers.details}` : "");
         setNumbers([]);
         return;
       }

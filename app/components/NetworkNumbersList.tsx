@@ -46,9 +46,17 @@ const NetworkNumbersList = ({ network }: NetworkNumbersListProps) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/numbers?network=${network}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+        console.error("Error fetching numbers:", errorData.error, errorData.details ? `Details: ${errorData.details}` : "");
+        setNumbers([]);
+        return;
+      }
+
       const data = await response.json();
       if (data.error) {
-        console.error("Error fetching numbers:", data.error);
+        console.error("Error fetching numbers:", data.error, data.details ? `Details: ${data.details}` : "");
         setNumbers([]);
       } else {
         setNumbers(Array.isArray(data) ? data : []);
@@ -64,9 +72,17 @@ const NetworkNumbersList = ({ network }: NetworkNumbersListProps) => {
   const fetchCategories = async () => {
     try {
       const response = await fetch("/api/categories");
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+        console.error("Error fetching categories:", errorData.error, errorData.details ? `Details: ${errorData.details}` : "");
+        setCategories([]);
+        return;
+      }
+
       const data = await response.json();
       if (data.error) {
-        console.error("Error fetching categories:", data.error);
+        console.error("Error fetching categories:", data.error, data.details ? `Details: ${data.details}` : "");
         setCategories([]);
       } else {
         setCategories(Array.isArray(data) ? data : []);

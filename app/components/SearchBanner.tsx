@@ -58,6 +58,31 @@ const SearchBanner = ({
   const priceDropdownRef = useRef<HTMLDivElement>(null);
   const searchDropdownRef = useRef<HTMLDivElement>(null);
 
+  const fetchNumbers = async () => {
+    try {
+      const response = await fetch("/api/numbers");
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+        console.error("Error fetching numbers:", errorData.error, errorData.details ? `Details: ${errorData.details}` : "");
+        setAllNumbers([]);
+        return;
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        console.error("Error fetching numbers:", data.error, data.details ? `Details: ${data.details}` : "");
+        setAllNumbers([]);
+      } else {
+        setAllNumbers(Array.isArray(data) ? data : []);
+      }
+    } catch (error) {
+      console.error("Error fetching numbers:", error);
+      setAllNumbers([]);
+    }
+  };
+
   useEffect(() => {
     fetchNumbers();
   }, []);
@@ -76,22 +101,6 @@ const SearchBanner = ({
       setShowSearchDropdown(false);
     }
   }, [searchTerm, allNumbers]);
-
-  const fetchNumbers = async () => {
-    try {
-      const response = await fetch("/api/numbers");
-      const data = await response.json();
-      if (data.error) {
-        console.error("Error fetching numbers:", data.error);
-        setAllNumbers([]);
-      } else {
-        setAllNumbers(Array.isArray(data) ? data : []);
-      }
-    } catch (error) {
-      console.error("Error fetching numbers:", error);
-      setAllNumbers([]);
-    }
-  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

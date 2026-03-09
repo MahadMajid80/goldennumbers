@@ -34,9 +34,14 @@ const PremiumNumbersTable = () => {
   const fetchPremiumNumbers = async () => {
     try {
       const response = await fetch("/api/numbers?premiumNumber=true");
+      
       if (!response.ok) {
-        console.error("API response not OK:", response.status, response.statusText);
+        const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+        console.error("Error fetching premium numbers:", errorData.error, errorData.details ? `Details: ${errorData.details}` : "");
+        setPremiumNumbers([]);
+        return;
       }
+
       const data = await response.json();
       if (data.error) {
         console.error("Error fetching premium numbers:", data.error, data.details ? `Details: ${data.details}` : "");
