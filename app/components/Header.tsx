@@ -134,6 +134,12 @@ const Header = () => {
                 </svg>
                 <span className="text-base font-medium">+92-321-111-111-8</span>
               </button>
+              <Link
+                href="/admin/login"
+                className="text-white border border-gray-600 px-4 py-2 rounded-full font-medium hover:border-[#FFD700] hover:text-[#FFD700] transition-colors"
+              >
+                Login
+              </Link>
             </div>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -319,6 +325,13 @@ const Header = () => {
                 </svg>
                 <span className="text-base font-medium">+92-321-111-111-8</span>
               </button>
+              <Link
+                href="/admin/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-3 mt-2 text-white text-center border border-gray-600 rounded-lg font-medium hover:border-[#FFD700] hover:text-[#FFD700] transition-colors"
+              >
+                Login
+              </Link>
             </div>
           </div>
         </div>
