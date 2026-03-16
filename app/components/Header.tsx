@@ -42,7 +42,7 @@ const Header = () => {
       <nav className="bg-black border-b border-gray-800">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between py-4">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/" className="hidden md:flex items-center gap-3">
               <Image
                 src="/Golden numbers Hub Logo White  (1).png"
                 alt="Golden Numbers Logo"
@@ -190,16 +190,9 @@ const Header = () => {
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
             {/* Header with close button */}
             <div className="flex items-center justify-between p-4 border-b border-gray-800">
-              <Image
-                src="/Golden numbers Hub Logo White  (1).png"
-                alt="Golden Numbers Logo"
-                width={120}
-                height={60}
-                className="object-contain h-8"
-              />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-white hover:text-[#FFD700] transition-colors"
