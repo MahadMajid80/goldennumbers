@@ -54,7 +54,7 @@ const Footer = () => {
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Payment Methods</h3>
-            <div className="flex flex-nowrap md:flex-wrap gap-3 md:gap-4 items-center overflow-x-auto scrollbar-hide">
+            <div className="flex flex-nowrap md:flex-wrap gap-3 md:gap-4 items-center justify-center overflow-x-auto scrollbar-hide">
               <div className="bg-white rounded-lg p-3 flex items-center justify-center h-20 w-28 md:w-32 flex-shrink-0">
                 <Image
                   src="/aa6f71db41f159a4b56a81cd41aa0c1f.png"
