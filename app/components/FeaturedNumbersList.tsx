@@ -174,7 +174,7 @@ const FeaturedNumbersList = ({
             />
           </div>
         </div>
-        <div className="flex md:hidden items-center gap-4 mb-6 overflow-x-auto scrollbar-hide">
+        <div className="flex md:hidden items-center gap-2 mb-4 overflow-x-auto scrollbar-hide border border-gray-700/60 rounded-lg px-3 py-2">
           <button
             onClick={() => {
               if (selectedNetwork === "Jazz") {
@@ -183,7 +183,7 @@ const FeaturedNumbersList = ({
                 setSelectedNetwork("Jazz");
               }
             }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg font-medium transition-all whitespace-nowrap ${
               selectedNetwork === "Jazz"
                 ? "border-2 border-[#FFD700] text-white"
                 : "text-white"
@@ -214,7 +214,7 @@ const FeaturedNumbersList = ({
                 setSelectedNetwork("Zong");
               }
             }}
-            className={`px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+            className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all whitespace-nowrap ${
               selectedNetwork === "Zong"
                 ? "border-2 border-[#FFD700] text-white"
                 : "text-white"
@@ -230,7 +230,7 @@ const FeaturedNumbersList = ({
                 setSelectedNetwork("Ufone");
               }
             }}
-            className={`px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+            className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all whitespace-nowrap ${
               selectedNetwork === "Ufone"
                 ? "border-2 border-[#FFD700] text-white"
                 : "text-white"
@@ -246,7 +246,7 @@ const FeaturedNumbersList = ({
                 setSelectedNetwork("Telenor");
               }
             }}
-            className={`px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+            className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all whitespace-nowrap ${
               selectedNetwork === "Telenor"
                 ? "border-2 border-[#FFD700] text-white"
                 : "text-white"
@@ -255,7 +255,7 @@ const FeaturedNumbersList = ({
             Telenor
           </button>
         </div>
-        <div className="mb-6">
+        <div className="mb-6 md:mb-6 border border-gray-700/60 rounded-lg px-3 py-2 md:border-0 md:rounded-none md:px-0 md:py-0">
           <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-2 min-w-max pb-2">
               {filters.map((filter) => (
