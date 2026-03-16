@@ -148,11 +148,11 @@ const FeaturedNumbersCards = () => {
       </div>
       {/* Mobile: single-card vertical carousel with snap scrolling */}
       <div className="md:hidden">
-        <div className="h-[260px] overflow-y-auto scrollbar-hide snap-y snap-mandatory space-y-4 pb-2">
+        <div className="h-[220px] overflow-y-auto scrollbar-hide snap-y snap-mandatory space-y-3 pb-2">
           {featuredNumbers.map((item) => (
             <div
               key={item._id}
-              className="snap-center bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] rounded-2xl p-4 shadow-lg flex flex-col min-h-[240px]"
+              className="snap-center bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFD100] rounded-2xl px-4 py-3 shadow-lg flex flex-col min-h-[180px]"
             >
               <div className="flex items-start justify-between mb-4">
                 <Image
