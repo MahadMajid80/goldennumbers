@@ -146,9 +146,75 @@ const FeaturedNumbersCards = () => {
           <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
         </div>
       </div>
+      {/* Mobile: stacked vertical cards with snap scrolling */}
+      <div className="md:hidden">
+        <div className="max-h-[420px] overflow-y-auto scrollbar-hide snap-y snap-mandatory space-y-4 pb-2">
+          {featuredNumbers.map((item) => (
+            <div
+              key={item._id}
+              className="snap-start bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] rounded-2xl p-4 shadow-lg flex flex-col"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <Image
+                  src={getNetworkLogo(item.network)}
+                  alt={item.network}
+                  width={50}
+                  height={24}
+                  className="object-contain h-8"
+                />
+                {item.limitedOffer && (
+                  <span className="bg-black text-white px-3 py-1 rounded-full text-xs font-semibold">
+                    Limited Offer
+                  </span>
+                )}
+              </div>
+              <div className="flex-1 flex items-center justify-center mb-4">
+                <p className="text-2xl font-bold text-black text-center">
+                  {item.number}
+                </p>
+              </div>
+              <div className="flex items-center justify-between mt-auto">
+                <button
+                  onClick={openWhatsApp}
+                  className="bg-black text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors duration-300"
+                >
+                  Buy Now
+                </button>
+                {item.price !== "Price On Call" && (
+                  <span className="text-base font-semibold text-black">
+                    {item.price}
+                  </span>
+                )}
+                {item.price === "Price On Call" && (
+                  <button
+                    onClick={openWhatsApp}
+                    className="bg-black text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-gray-800 transition-colors duration-300 flex items-center gap-2"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                      />
+                    </svg>
+                    <span>Price On Call</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Desktop / tablet: existing horizontal auto-scrolling carousel */}
       <div
         ref={scrollContainerRef}
-        className="overflow-x-auto scrollbar-hide"
+        className="hidden md:block overflow-x-auto scrollbar-hide"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
