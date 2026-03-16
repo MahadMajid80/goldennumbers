@@ -318,9 +318,16 @@ const FeaturedNumbersList = ({
                             {item.number}
                           </p>
                           {item.categoryId && item.categoryId.length > 0 && (
-                            <button className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded text-xs font-bold w-fit">
-                              {item.categoryId[0]?.name || "Category"}
-                            </button>
+                            <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide max-w-full">
+                              {item.categoryId.map((cat) => (
+                                <span
+                                  key={cat._id}
+                                  className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
+                                >
+                                  {cat.name}
+                                </span>
+                              ))}
+                            </div>
                           )}
                         </div>
                         {/* Right side: Price and Action Buttons */}
@@ -488,9 +495,16 @@ const FeaturedNumbersList = ({
                           {item.number}
                         </p>
                         {item.categoryId && item.categoryId.length > 0 && (
-                          <button className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded text-xs font-bold w-fit">
-                            {item.categoryId[0]?.name || "Category"}
-                          </button>
+                          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide max-w-full">
+                            {item.categoryId.map((cat) => (
+                              <span
+                                key={cat._id}
+                                className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
+                              >
+                                {cat.name}
+                              </span>
+                            ))}
+                          </div>
                         )}
                       </div>
                       {/* Right side: Price and Action Buttons */}
