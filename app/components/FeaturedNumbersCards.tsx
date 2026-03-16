@@ -146,13 +146,13 @@ const FeaturedNumbersCards = () => {
           <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
         </div>
       </div>
-      {/* Mobile: stacked vertical cards with snap scrolling */}
+      {/* Mobile: single-card vertical carousel with snap scrolling */}
       <div className="md:hidden">
-        <div className="max-h-[420px] overflow-y-auto scrollbar-hide snap-y snap-mandatory space-y-4 pb-2">
+        <div className="h-[260px] overflow-y-auto scrollbar-hide snap-y snap-mandatory space-y-4 pb-2">
           {featuredNumbers.map((item) => (
             <div
               key={item._id}
-              className="snap-start bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] rounded-2xl p-4 shadow-lg flex flex-col"
+              className="snap-center bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] rounded-2xl p-4 shadow-lg flex flex-col min-h-[240px]"
             >
               <div className="flex items-start justify-between mb-4">
                 <Image
