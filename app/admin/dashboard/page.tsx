@@ -31,6 +31,11 @@ const DashboardPage = () => {
     return <div className="text-white dark:text-white text-gray-800">Loading...</div>;
   }
 
+  const soldNumbers = Math.max(
+    0,
+    stats.totalNumbers - stats.availableNumbers
+  );
+
   const statCards = [
     {
       title: "Total Numbers",
@@ -45,6 +50,13 @@ const DashboardPage = () => {
       color: "bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200",
       textColor: "text-emerald-700",
       icon: "✅",
+    },
+    {
+      title: "Sold",
+      value: soldNumbers,
+      color: "bg-gradient-to-br from-rose-50 to-rose-100 border border-rose-200",
+      textColor: "text-rose-700",
+      icon: "💳",
     },
     {
       title: "Pre-Owned",

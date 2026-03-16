@@ -317,9 +317,11 @@ const FeaturedNumbersList = ({
                           <p className="text-base font-bold text-white mb-1 leading-tight whitespace-nowrap">
                             {item.number}
                           </p>
-                          <button className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded text-xs font-bold w-fit">
-                            Exclusive
-                          </button>
+                          {item.categoryId && item.categoryId.length > 0 && (
+                            <button className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded text-xs font-bold w-fit">
+                              {item.categoryId[0]?.name || "Category"}
+                            </button>
+                          )}
                         </div>
                         {/* Right side: Price and Action Buttons */}
                         <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
@@ -485,9 +487,11 @@ const FeaturedNumbersList = ({
                         <p className="text-base font-bold text-white mb-1 leading-tight whitespace-nowrap">
                           {item.number}
                         </p>
-                        <button className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded text-xs font-bold w-fit">
-                          Exclusive
-                        </button>
+                        {item.categoryId && item.categoryId.length > 0 && (
+                          <button className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded text-xs font-bold w-fit">
+                            {item.categoryId[0]?.name || "Category"}
+                          </button>
+                        )}
                       </div>
                       {/* Right side: Price and Action Buttons */}
                       <div className="flex flex-col items-end gap-2 flex-shrink-0">
