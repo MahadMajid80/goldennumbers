@@ -262,7 +262,7 @@ const FeaturedNumbersList = ({
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-full font-semibold transition-colors shadow-sm whitespace-nowrap flex-shrink-0 ${
+                  className={`px-2 py-1.5 text-xs md:px-4 md:py-2 md:text-base rounded-full font-semibold transition-colors shadow-sm whitespace-nowrap flex-shrink-0 ${
                     activeFilter === filter
                       ? "bg-[#FFD700] text-black"
                       : "bg-gray-800 text-white hover:bg-gray-700"
