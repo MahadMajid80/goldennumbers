@@ -19,9 +19,9 @@ type NumberItem = {
 };
 
 const packages: Package[] = [
-  { id: "all", name: "All", icon: "/Icons/Tripple.png" },
-  { id: "penta", name: "Penta", icon: "/Icons/Penta.png" },
-  { id: "hexa", name: "Hexa", icon: "/Icons/Hexa.png" },
+  { id: "all", name: "All", icon: "/Icons 2/Tripple.png" },
+  { id: "penta", name: "Penta", icon: "/Icons 2/Penta.png" },
+  { id: "hexa", name: "Hexa", icon: "/Icons 2/Hexa.png" },
 ];
 
 const getNetworkLogo = (network: string) => {
@@ -99,8 +99,10 @@ const OurPackages = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">Our Packages</h2>
-        <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+        <div className="inline-block">
+          <h2 className="text-2xl font-bold text-white mb-2">Our Packages</h2>
+          <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+        </div>
       </div>
       <div className="space-y-3">
         {packages.map((pkg) => (

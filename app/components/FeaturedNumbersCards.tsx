@@ -114,8 +114,10 @@ const FeaturedNumbersCards = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
-          <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+          <div className="inline-block">
+            <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
+            <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+          </div>
         </div>
         <div className="text-white text-center">Loading featured numbers...</div>
       </div>
@@ -126,8 +128,10 @@ const FeaturedNumbersCards = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
-          <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+          <div className="inline-block">
+            <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
+            <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+          </div>
         </div>
         <div className="text-white text-center">No featured numbers available</div>
       </div>
@@ -137,8 +141,10 @@ const FeaturedNumbersCards = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
-        <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+        <div className="inline-block">
+          <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
+          <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+        </div>
       </div>
       <div
         ref={scrollContainerRef}

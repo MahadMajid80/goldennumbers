@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 type FilterType = "Category" | "Budget" | "Network";
@@ -11,19 +11,31 @@ type CategoryCard = {
   label: string;
 };
 
+type NumberItem = {
+  _id: string;
+  number: string;
+  price: string;
+  network: "Jazz" | "Ufone" | "Telenor" | "Warid" | "Zong";
+};
+
+type CategoryApiItem = {
+  _id: string;
+  name: string;
+};
+
 const categories: CategoryCard[] = [
-  { id: "triple", icon: "/Icons/Tripple.png", label: "Triple" },
-  { id: "hexa", icon: "/Icons/Hexa.png", label: "Hexa" },
-  { id: "uan", icon: "/Icons/UAN.png", label: "UAN" },
-  { id: "triplets", icon: "/Icons/Triplet.png", label: "Triplets" },
-  { id: "tetra", icon: "/Icons/Tetra.png", label: "Tetra" },
-  { id: "hepta", icon: "/Icons/Hepta.png", label: "Hepta" },
-  { id: "all-digit", icon: "/Icons/0300.png", label: "All Digit" },
-  { id: "golden", icon: "/Icons/UAN.png", label: "Golden" },
-  { id: "penta", icon: "/Icons/Penta.png", label: "Penta" },
-  { id: "786", icon: "/Icons/786.png", label: "786" },
-  { id: "master-code", icon: "/Icons/Master code.png", label: "Master Code" },
-  { id: "silver", icon: "/Icons/0321.png", label: "Silver" },
+  { id: "triple", icon: "/Icons 2/Tripple.png", label: "Triple" },
+  { id: "hexa", icon: "/Icons 2/Hexa.png", label: "Hexa" },
+  { id: "uan", icon: "/Icons 2/UAN.png", label: "UAN" },
+  { id: "triplets", icon: "/Icons 2/Triplet.png", label: "Triplets" },
+  { id: "tetra", icon: "/Icons 2/Tetra.png", label: "Tetra" },
+  { id: "hepta", icon: "/Icons 2/Hepta.png", label: "Hepta" },
+  { id: "all-digit", icon: "/Icons 2/0300.png", label: "All Digit" },
+  { id: "golden", icon: "/Icons 2/UAN.png", label: "Golden" },
+  { id: "penta", icon: "/Icons 2/Penta.png", label: "Penta" },
+  { id: "786", icon: "/Icons 2/786.png", label: "786" },
+  { id: "master-code", icon: "/Icons 2/Master code.png", label: "Master Code" },
+  { id: "silver", icon: "/Icons 2/0321.png", label: "Silver" },
 ];
 
 const getNetworkLogo = (network: string) => {
@@ -42,9 +54,118 @@ const BrowseNumbers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [minBudget, setMinBudget] = useState(20);
   const [maxBudget, setMaxBudget] = useState(80);
+  const [budgetNumbers, setBudgetNumbers] = useState<NumberItem[]>([]);
+  const [budgetLoading, setBudgetLoading] = useState(false);
+  const [budgetError, setBudgetError] = useState<string | null>(null);
+  const [categoryApiItems, setCategoryApiItems] = useState<CategoryApiItem[]>([]);
+  const [selectedCategoryLabel, setSelectedCategoryLabel] = useState<string | null>(null);
+  const [categoryNumbers, setCategoryNumbers] = useState<NumberItem[]>([]);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [categoryError, setCategoryError] = useState<string | null>(null);
+  const minRangeRef = useRef<HTMLInputElement>(null);
+  const maxRangeRef = useRef<HTMLInputElement>(null);
 
   const filters: FilterType[] = ["Category", "Budget", "Network"];
   const networks = ["Jazz", "Zong", "Ufone", "Telenor"];
+
+  const budgetToPrice = (value: number): number =>
+    Math.round((value / 100) * 1_000_000);
+
+  const formatPrice = (value: number): string =>
+    value.toLocaleString("en-PK", { maximumFractionDigits: 0 });
+
+  const normalizeCategoryName = (name: string): string =>
+    name.trim().toLowerCase().replace(/\s+/g, " ");
+
+  const ensureCategoriesLoaded = async (): Promise<CategoryApiItem[]> => {
+    if (categoryApiItems.length > 0) {
+      return categoryApiItems;
+    }
+
+    const response = await fetch("/api/categories");
+    if (!response.ok) {
+      const errorData = await response
+        .json()
+        .catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+      console.error(
+        "Error fetching categories:",
+        errorData.error,
+        errorData.details ? `Details: ${errorData.details}` : ""
+      );
+      throw new Error("Unable to load categories.");
+    }
+
+    const data: unknown = await response.json();
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid categories response.");
+    }
+
+    const items = data
+      .map((item) => {
+        if (
+          item &&
+          typeof item === "object" &&
+          "_id" in item &&
+          "name" in item &&
+          typeof (item as { _id?: unknown })._id === "string" &&
+          typeof (item as { name?: unknown }).name === "string"
+        ) {
+          return { _id: (item as { _id: string })._id, name: (item as { name: string }).name };
+        }
+        return null;
+      })
+      .filter((x): x is CategoryApiItem => x !== null);
+
+    setCategoryApiItems(items);
+    return items;
+  };
+
+  const fetchNumbersByCategoryId = async (categoryId: string) => {
+    try {
+      setCategoryLoading(true);
+      setCategoryError(null);
+      setCategoryNumbers([]);
+
+      const response = await fetch(`/api/numbers?category=${encodeURIComponent(categoryId)}`);
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+        console.error(
+          "Error fetching category numbers:",
+          errorData.error,
+          errorData.details ? `Details: ${errorData.details}` : ""
+        );
+        setCategoryError("Unable to load numbers for this category.");
+        return;
+      }
+
+      const data: unknown = await response.json();
+      if (Array.isArray(data)) {
+        setCategoryNumbers(data as NumberItem[]);
+        return;
+      }
+
+      if (data && typeof data === "object" && "error" in data) {
+        const err = (data as { error?: unknown; details?: unknown }).error;
+        const details = (data as { details?: unknown }).details;
+        console.error(
+          "Error fetching category numbers:",
+          err,
+          typeof details === "string" ? `Details: ${details}` : ""
+        );
+        setCategoryError("Unable to load numbers for this category.");
+        return;
+      }
+
+      setCategoryNumbers([]);
+    } catch (error) {
+      console.error("Error fetching category numbers:", error);
+      setCategoryError("Unable to load numbers for this category.");
+    } finally {
+      setCategoryLoading(false);
+    }
+  };
 
   const handleMinChange = (value: number) => {
     if (value <= maxBudget) {
@@ -58,15 +179,69 @@ const BrowseNumbers = () => {
     }
   };
 
+  useEffect(() => {
+    if (activeFilter !== "Budget") {
+      return;
+    }
+
+    const fetchBudgetNumbers = async () => {
+      try {
+        setBudgetLoading(true);
+        setBudgetError(null);
+
+        const minPrice = budgetToPrice(minBudget);
+        const maxPrice = budgetToPrice(maxBudget);
+
+        const response = await fetch(
+          `/api/numbers?minPrice=${minPrice}&maxPrice=${maxPrice}`
+        );
+
+        if (!response.ok) {
+          const errorData = await response
+            .json()
+            .catch(() => ({
+              error: `HTTP ${response.status}: ${response.statusText}`,
+            }));
+          console.error(
+            "Error fetching budget numbers:",
+            errorData.error,
+            errorData.details ? `Details: ${errorData.details}` : ""
+          );
+          setBudgetNumbers([]);
+          setBudgetError("Unable to load numbers for this budget range.");
+          return;
+        }
+
+        const data = await response.json();
+        if (data.error) {
+          console.error(
+            "Error fetching budget numbers:",
+            data.error,
+            data.details ? `Details: ${data.details}` : ""
+          );
+          setBudgetNumbers([]);
+          setBudgetError("Unable to load numbers for this budget range.");
+        } else {
+          setBudgetNumbers(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Error fetching budget numbers:", error);
+        setBudgetNumbers([]);
+        setBudgetError("Unable to load numbers for this budget range.");
+      } finally {
+        setBudgetLoading(false);
+      }
+    };
+
+    fetchBudgetNumbers();
+  }, [activeFilter, minBudget, maxBudget]);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">Browse Numbers</h2>
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
-          {(activeFilter === "Category" || activeFilter === "Network") && (
-            <div className="w-8 h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
-          )}
+        <div className="inline-block">
+          <h2 className="text-2xl font-bold text-white mb-2">Browse Numbers</h2>
+          <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
         </div>
       </div>
 
@@ -97,72 +272,143 @@ const BrowseNumbers = () => {
               <div
                 className="absolute h-2 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded-full"
                 style={{
-                  left: `${(minBudget / 100) * 100}%`,
-                  width: `${((maxBudget - minBudget) / 100) * 100}%`,
+                  left: `${minBudget}%`,
+                  width: `${maxBudget - minBudget}%`,
                 }}
               ></div>
               
               <div className="absolute flex justify-between w-full -bottom-6">
-                <span className="text-white text-sm">{minBudget}</span>
-                <span className="text-white text-sm">{maxBudget}</span>
+                <span className="text-white text-sm">
+                  Rs {formatPrice(budgetToPrice(minBudget))}
+                </span>
+                <span className="text-white text-sm">
+                  Rs {formatPrice(budgetToPrice(maxBudget))}
+                </span>
               </div>
             </div>
             
             <div className="relative mt-8">
               <div className="relative w-full">
                 <input
+                  ref={minRangeRef}
                   type="range"
                   min="0"
                   max="100"
                   value={minBudget}
                   onChange={(e) => handleMinChange(Number(e.target.value))}
-                  className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-black [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
+                  onPointerDown={() => {
+                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "30";
+                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "20";
+                  }}
+                  onMouseDown={() => {
+                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "30";
+                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "20";
+                  }}
+                  className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer z-20 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-black [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
                 />
                 <input
+                  ref={maxRangeRef}
                   type="range"
                   min="0"
                   max="100"
                   value={maxBudget}
                   onChange={(e) => handleMaxChange(Number(e.target.value))}
-                  className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer z-10 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-black [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
+                  onPointerDown={() => {
+                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "30";
+                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "20";
+                  }}
+                  onMouseDown={() => {
+                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "30";
+                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "20";
+                  }}
+                  className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer z-30 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-black [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
                 />
               </div>
             </div>
             
-            <div className="flex justify-between mt-8">
+            <div className="flex justify-between mt-18">
               <div className="flex items-center gap-2">
                 <span className="text-white">From</span>
                 <input
                   type="number"
-                  value={minBudget}
+                  value={budgetToPrice(minBudget)}
                   onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (val >= 0 && val <= maxBudget) {
-                      setMinBudget(val);
+                    const raw = Number(e.target.value);
+                    if (Number.isNaN(raw) || raw < 0) return;
+                    const percentage = Math.min(
+                      100,
+                      Math.max(0, (raw / 1_000_000) * 100)
+                    );
+                    if (percentage <= maxBudget) {
+                      setMinBudget(percentage);
                     }
                   }}
                   min="0"
-                  max={maxBudget}
-                  className="w-20 px-3 py-2 bg-white border border-black rounded text-black focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
+                  max={budgetToPrice(maxBudget)}
+                  className="w-32 px-3 py-2 bg-white border border-black rounded text-black focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
                 />
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-white">To</span>
                 <input
                   type="number"
-                  value={maxBudget}
+                  value={budgetToPrice(maxBudget)}
                   onChange={(e) => {
-                    const val = Number(e.target.value);
-                    if (val >= minBudget && val <= 100) {
-                      setMaxBudget(val);
+                    const raw = Number(e.target.value);
+                    if (Number.isNaN(raw) || raw < 0) return;
+                    const percentage = Math.min(
+                      100,
+                      Math.max(0, (raw / 1_000_000) * 100)
+                    );
+                    if (percentage >= minBudget) {
+                      setMaxBudget(percentage);
                     }
                   }}
-                  min={minBudget}
-                  max="100"
-                  className="w-20 px-3 py-2 bg-white border border-black rounded text-black focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
+                  min={budgetToPrice(minBudget)}
+                  max={1_000_000}
+                  className="w-32 px-3 py-2 bg-white border border-black rounded text-black focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
                 />
               </div>
             </div>
+          </div>
+          <div className="mt-6">
+            {budgetLoading && (
+              <div className="text-white text-center py-4">
+                Loading numbers for this budget...
+              </div>
+            )}
+            {!budgetLoading && budgetError && (
+              <div className="text-red-400 text-center py-4 text-sm">
+                {budgetError}
+              </div>
+            )}
+            {!budgetLoading && !budgetError && budgetNumbers.length === 0 && (
+              <div className="text-white text-center py-4">
+                No numbers found in this budget range.
+              </div>
+            )}
+            {!budgetLoading && !budgetError && budgetNumbers.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                {budgetNumbers.map((item) => (
+                  <div
+                    key={item._id}
+                    className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-[#FFD700] hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+                  >
+                    <div className="mb-2">
+                      <span className="inline-block text-xs font-semibold px-2 py-1 rounded-full bg-gray-700 text-gray-300">
+                        {item.network}
+                      </span>
+                    </div>
+                    <p className="text-xl font-bold text-[#FFD700] mb-2">
+                      {item.number}
+                    </p>
+                    <p className="text-sm font-semibold text-gray-300">
+                      {item.price}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -201,23 +447,111 @@ const BrowseNumbers = () => {
       )}
 
       {activeFilter === "Category" && (
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-6">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              className="bg-gray-800 rounded-lg p-6 flex flex-col items-center justify-center gap-3 hover:bg-gray-750 transition-all duration-300 shadow-lg border border-gray-700 hover:border-[#FFD700] group"
-            >
-              <div className="w-16 h-16 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <Image
-                  src={category.icon}
-                  alt={category.label}
-                  width={64}
-                  height={64}
-                  className="object-contain w-full h-full"
-                />
-              </div>
-            </button>
-          ))}
+        <div className="mb-6">
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+            {categories.map((category) => {
+              const isSelected =
+                selectedCategoryLabel !== null &&
+                normalizeCategoryName(selectedCategoryLabel) ===
+                  normalizeCategoryName(category.label);
+
+              return (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      setSelectedCategoryLabel(category.label);
+                      const apiCats = await ensureCategoriesLoaded();
+                      const match = apiCats.find(
+                        (c) =>
+                          normalizeCategoryName(c.name) ===
+                          normalizeCategoryName(category.label)
+                      );
+
+                      if (!match) {
+                        setCategoryNumbers([]);
+                        setCategoryError(
+                          `Category "${category.label}" not found in database.`
+                        );
+                        return;
+                      }
+
+                      await fetchNumbersByCategoryId(match._id);
+                    } catch (e) {
+                      console.error("Category click failed:", e);
+                      setCategoryNumbers([]);
+                      setCategoryError("Unable to load this category.");
+                    }
+                  }}
+                  className={`bg-gray-800 rounded-lg p-6 flex flex-col items-center justify-center gap-3 hover:bg-gray-750 transition-all duration-300 shadow-lg border group ${
+                    isSelected
+                      ? "border-[#FFD700]"
+                      : "border-gray-700 hover:border-[#FFD700]"
+                  }`}
+                >
+                  <div className="w-16 h-16 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Image
+                      src={category.icon}
+                      alt={category.label}
+                      width={64}
+                      height={64}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <span className="text-xs font-semibold text-gray-300">
+                    {category.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {selectedCategoryLabel && (
+            <div className="mt-4">
+              {categoryLoading && (
+                <div className="text-white text-center py-4">
+                  Loading {selectedCategoryLabel} numbers...
+                </div>
+              )}
+              {!categoryLoading && categoryError && (
+                <div className="text-red-400 text-center py-4 text-sm">
+                  {categoryError}
+                </div>
+              )}
+              {!categoryLoading &&
+                !categoryError &&
+                categoryNumbers.length === 0 && (
+                  <div className="text-white text-center py-4">
+                    No numbers found for {selectedCategoryLabel}.
+                  </div>
+                )}
+              {!categoryLoading &&
+                !categoryError &&
+                categoryNumbers.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {categoryNumbers.map((item) => (
+                      <div
+                        key={item._id}
+                        className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-[#FFD700] hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+                      >
+                        <div className="mb-2">
+                          <span className="inline-block text-xs font-semibold px-2 py-1 rounded-full bg-gray-700 text-gray-300">
+                            {item.network}
+                          </span>
+                        </div>
+                        <p className="text-xl font-bold text-[#FFD700] mb-2">
+                          {item.number}
+                        </p>
+                        <p className="text-sm font-semibold text-gray-300">
+                          {item.price}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+            </div>
+          )}
         </div>
       )}
 
