@@ -41,7 +41,7 @@ const Header = () => {
     <header className="w-full">
       <nav className="bg-black border-b border-gray-800">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-end md:justify-between py-4">
             <Link href="/" className="hidden md:flex items-center gap-3">
               <Image
                 src="/Golden numbers Hub Logo White  (1).png"
