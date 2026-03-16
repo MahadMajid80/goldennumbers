@@ -174,7 +174,7 @@ const FeaturedNumbersList = ({
             />
           </div>
         </div>
-        <div className="flex md:hidden items-center gap-2 mb-4 overflow-x-auto scrollbar-hide border border-gray-700/60 rounded-lg px-3 py-2">
+        <div className="flex md:hidden items-center justify-center gap-2 mb-4 overflow-x-auto scrollbar-hide border border-gray-700/60 rounded-lg px-3 py-2">
           <button
             onClick={() => {
               if (selectedNetwork === "Jazz") {
