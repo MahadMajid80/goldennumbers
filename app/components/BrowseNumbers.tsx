@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
-type FilterType = "Category" | "Budget" | "Network";
+type FilterType = "Category" | "Budget";
 
 type CategoryCard = {
   id: string;
@@ -38,17 +38,6 @@ const categories: CategoryCard[] = [
   { id: "silver", icon: "/Icons 2/0321.png", label: "Silver" },
 ];
 
-const getNetworkLogo = (network: string) => {
-  const logos: Record<string, string> = {
-    Jazz: "/jazz-logo.png",
-    Ufone: "/ufone-logo (1).png",
-    Telenor: "/telenor-logo-icon (3).png",
-    Warid: "/596_warid_telecom_logo-Photoroom (1).png",
-    Zong: "/zong-logo (1).png",
-  };
-  return logos[network] || "/jazz-logo.png";
-};
-
 const BrowseNumbers = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("Category");
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,8 +54,7 @@ const BrowseNumbers = () => {
   const minRangeRef = useRef<HTMLInputElement>(null);
   const maxRangeRef = useRef<HTMLInputElement>(null);
 
-  const filters: FilterType[] = ["Category", "Budget", "Network"];
-  const networks = ["Jazz", "Zong", "Ufone", "Telenor"];
+  const filters: FilterType[] = ["Category", "Budget"];
 
   const budgetToPrice = (value: number): number =>
     Math.round((value / 100) * 1_000_000);
@@ -409,39 +397,6 @@ const BrowseNumbers = () => {
                 ))}
               </div>
             )}
-          </div>
-        </div>
-      )}
-
-      {activeFilter === "Network" && (
-        <div className="mb-8">
-          <div className="mb-6">
-            <h3 className="text-white text-lg font-semibold mb-2">Network</h3>
-            <div className="w-16 h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            {networks.map((network) => (
-              <button
-                key={network}
-                className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-750 transition-all duration-300 shadow-lg border border-gray-700 hover:border-[#FFD700] group"
-              >
-                <div className="h-32 bg-black flex items-center justify-center">
-                  <Image
-                    src={getNetworkLogo(network)}
-                    alt={network}
-                    width={120}
-                    height={60}
-                    className="object-contain h-16 opacity-80 group-hover:opacity-100 transition-opacity"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="w-full bg-white text-black px-4 py-2 rounded-lg font-bold text-center">
-                    {network.toUpperCase()}
-                  </div>
-                </div>
-              </button>
-            ))}
           </div>
         </div>
       )}
