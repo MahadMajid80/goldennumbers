@@ -286,13 +286,13 @@ const FeaturedNumbersList = ({
           <div>
             {filteredNumbers.length > 8 ? (
               <div
-                className="max-h-[500px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
+                className="max-h-[340px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#4B5563 #1F2937",
                 }}
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                   {filteredNumbers.map((item) => (
                     <div
                       key={item._id}
