@@ -318,19 +318,19 @@ const FeaturedNumbersList = ({
                       <div className="w-full md:hidden flex items-center justify-between gap-2">
                         {/* Left side: Logo */}
                         <div className="flex-shrink-0">
-                          <div className="w-12 h-12 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
+                          <div className="w-10 h-10 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
                             <Image
                               src={getNetworkLogo(item.network)}
                               alt={item.network}
-                              width={48}
-                              height={48}
+                              width={40}
+                              height={40}
                               className="object-contain w-full h-full p-1"
                             />
                           </div>
                         </div>
                         {/* Middle: Number and Exclusive Button */}
                         <div className="flex flex-col flex-1 min-w-0">
-                          <p className="text-base font-bold text-white mb-1 leading-tight whitespace-nowrap">
+                          <p className="text-sm font-bold text-white mb-0.5 leading-tight whitespace-nowrap">
                             {item.number}
                           </p>
                           {item.categoryId && item.categoryId.length > 0 && (
@@ -338,7 +338,7 @@ const FeaturedNumbersList = ({
                               {item.categoryId.map((cat) => (
                                 <span
                                   key={cat._id}
-                                  className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
+                                  className="bg-[#FFD700] text-black px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
                                 >
                                   {cat.name}
                                 </span>
@@ -347,14 +347,14 @@ const FeaturedNumbersList = ({
                           )}
                         </div>
                         {/* Right side: Price and Action Buttons */}
-                        <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                          <p className="text-sm font-bold text-white leading-tight whitespace-nowrap">
+                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                          <p className="text-xs font-bold text-white leading-tight whitespace-nowrap">
                             {item.price}
                           </p>
                           <div className="flex items-center gap-1.5">
                             <button
                               onClick={openWhatsApp}
-                              className="bg-green-500 w-7 h-7 rounded-lg flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
+                              className="bg-green-500 w-6 h-6 rounded-md flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
                             >
                               <svg
                                 className="w-3 h-3 text-white"
@@ -366,7 +366,7 @@ const FeaturedNumbersList = ({
                             </button>
                             <button
                               onClick={openWhatsApp}
-                              className="bg-yellow-400 w-7 h-7 rounded-lg flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
+                              className="bg-yellow-400 w-6 h-6 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                             >
                               <svg
                                 className="w-3 h-3 text-black"
@@ -495,19 +495,19 @@ const FeaturedNumbersList = ({
                     <div className="w-full md:hidden flex items-center justify-between gap-2">
                       {/* Left side: Logo */}
                       <div className="flex-shrink-0">
-                        <div className="w-12 h-12 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
+                        <div className="w-10 h-10 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
                           <Image
                             src={getNetworkLogo(item.network)}
                             alt={item.network}
-                            width={48}
-                            height={48}
+                            width={40}
+                            height={40}
                             className="object-contain w-full h-full p-1"
                           />
                         </div>
                       </div>
                       {/* Middle: Number and Exclusive Button */}
                       <div className="flex flex-col flex-1 min-w-0">
-                        <p className="text-base font-bold text-white mb-1 leading-tight whitespace-nowrap">
+                        <p className="text-sm font-bold text-white mb-0.5 leading-tight whitespace-nowrap">
                           {item.number}
                         </p>
                         {item.categoryId && item.categoryId.length > 0 && (
@@ -515,7 +515,7 @@ const FeaturedNumbersList = ({
                             {item.categoryId.map((cat) => (
                               <span
                                 key={cat._id}
-                                className="bg-[#FFD700] text-black px-2.5 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
+                                className="bg-[#FFD700] text-black px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
                               >
                                 {cat.name}
                               </span>
@@ -524,17 +524,17 @@ const FeaturedNumbersList = ({
                         )}
                       </div>
                       {/* Right side: Price and Action Buttons */}
-                      <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                        <p className="text-lg font-bold text-white leading-tight whitespace-nowrap">
+                      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                        <p className="text-xs font-bold text-white leading-tight whitespace-nowrap">
                           {item.price}
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <button
                             onClick={openWhatsApp}
-                            className="bg-green-500 w-9 h-9 rounded-lg flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
+                            className="bg-green-500 w-6 h-6 rounded-md flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
                           >
                             <svg
-                              className="w-4 h-4 text-white"
+                              className="w-3 h-3 text-white"
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -543,10 +543,10 @@ const FeaturedNumbersList = ({
                           </button>
                           <button
                             onClick={openWhatsApp}
-                            className="bg-yellow-400 w-9 h-9 rounded-lg flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
+                            className="bg-yellow-400 w-6 h-6 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                           >
                             <svg
-                              className="w-4 h-4 text-black"
+                              className="w-3 h-3 text-black"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
