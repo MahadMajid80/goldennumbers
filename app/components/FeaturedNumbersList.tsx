@@ -292,7 +292,7 @@ const FeaturedNumbersList = ({
                   scrollbarColor: "#4B5563 #1F2937",
                 }}
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
                   {filteredNumbers.map((item) => (
                     <div
                       key={item._id}
@@ -469,7 +469,7 @@ const FeaturedNumbersList = ({
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
                 {filteredNumbers.map((item) => (
                   <div
                     key={item._id}
