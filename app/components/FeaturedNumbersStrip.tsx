@@ -39,7 +39,7 @@ const FeaturedNumbersStrip = () => {
   );
 
   return (
-    <div className="w-full py-4 px-4">
+    <div className="w-full py-2 md:py-4 px-4">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {renderStrip()}
