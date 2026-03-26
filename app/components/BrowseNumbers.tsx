@@ -452,9 +452,6 @@ const BrowseNumbers = () => {
                       className="object-contain w-full h-full"
                     />
                   </div>
-                  <span className="text-xs font-semibold text-gray-300">
-                    {category.label}
-                  </span>
                 </button>
               );
             })}
