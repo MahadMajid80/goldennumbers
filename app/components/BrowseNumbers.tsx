@@ -24,18 +24,18 @@ type CategoryApiItem = {
 };
 
 const categories: CategoryCard[] = [
-  { id: "triple", icon: "/Icons 2/Tripple.png", label: "Triple" },
-  { id: "hexa", icon: "/Icons 2/Hexa.png", label: "Hexa" },
-  { id: "uan", icon: "/Icons 2/UAN.png", label: "UAN" },
-  { id: "triplets", icon: "/Icons 2/Triplet.png", label: "Triplets" },
-  { id: "tetra", icon: "/Icons 2/Tetra.png", label: "Tetra" },
+  { id: "triple", icon: "/Icons-3/Text Title 6.png", label: "Triple" },
+  { id: "hexa", icon: "/Icons-3/Text Title 9.png", label: "Hexa" },
+  { id: "uan", icon: "/Icons-3/Text Title 5.png", label: "UAN" },
+  { id: "triplets", icon: "/Icons-3/Text Title 10.png", label: "Triplets" },
+  { id: "tetra", icon: "/Icons-3/Text Title 7.png", label: "Tetra" },
   { id: "hepta", icon: "/Icons 2/Hepta.png", label: "Hepta" },
-  { id: "all-digit", icon: "/Icons 2/0300.png", label: "All Digit" },
-  { id: "golden", icon: "/Icons 2/UAN.png", label: "Golden" },
-  { id: "penta", icon: "/Icons 2/Penta.png", label: "Penta" },
-  { id: "786", icon: "/Icons 2/786.png", label: "786" },
-  { id: "master-code", icon: "/Icons 2/Master code.png", label: "Master Code" },
-  { id: "silver", icon: "/Icons 2/0321.png", label: "Silver" },
+  { id: "all-digit", icon: "/Icons-3/Text Title 2.png", label: "All Digit" },
+  { id: "golden", icon: "/Icons-3/Text Title 5.png", label: "Golden" },
+  { id: "penta", icon: "/Icons-3/Text Title 8.png", label: "Penta" },
+  { id: "786", icon: "/Icons-3/Text Title 1.png", label: "786" },
+  { id: "master-code", icon: "/Icons-3/Text Title 11.png", label: "Master Code" },
+  { id: "silver", icon: "/Icons-3/Text Title 3.png", label: "Silver" },
 ];
 
 const BrowseNumbers = () => {

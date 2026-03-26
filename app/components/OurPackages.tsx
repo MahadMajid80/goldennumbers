@@ -19,9 +19,9 @@ type NumberItem = {
 };
 
 const packages: Package[] = [
-  { id: "all", name: "All", icon: "/Icons 2/Tripple.png" },
-  { id: "penta", name: "Penta", icon: "/Icons 2/Penta.png" },
-  { id: "hexa", name: "Hexa", icon: "/Icons 2/Hexa.png" },
+  { id: "all", name: "All", icon: "/Icons-3/Text Title 6.png" },
+  { id: "penta", name: "Penta", icon: "/Icons-3/Text Title 8.png" },
+  { id: "hexa", name: "Hexa", icon: "/Icons-3/Text Title 9.png" },
 ];
 
 const getNetworkLogo = (network: string) => {
