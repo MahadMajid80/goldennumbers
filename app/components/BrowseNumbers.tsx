@@ -29,7 +29,6 @@ const categories: CategoryCard[] = [
   { id: "uan", icon: "/Icons-3/Text Title 5.png", label: "UAN" },
   { id: "triplets", icon: "/Icons-3/Text Title 10.png", label: "Triplets" },
   { id: "tetra", icon: "/Icons-3/Text Title 7.png", label: "Tetra" },
-  { id: "hepta", icon: "/Icons 2/Hepta.png", label: "Hepta" },
   { id: "all-digit", icon: "/Icons-3/Text Title 2.png", label: "All Digit" },
   { id: "golden", icon: "/Icons-3/Text Title 5.png", label: "Golden" },
   { id: "penta", icon: "/Icons-3/Text Title 8.png", label: "Penta" },
@@ -40,7 +39,6 @@ const categories: CategoryCard[] = [
 
 const BrowseNumbers = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("Category");
-  const [currentPage, setCurrentPage] = useState(1);
   const [minBudget, setMinBudget] = useState(20);
   const [maxBudget, setMaxBudget] = useState(80);
   const [budgetNumbers, setBudgetNumbers] = useState<NumberItem[]>([]);
@@ -403,7 +401,7 @@ const BrowseNumbers = () => {
 
       {activeFilter === "Category" && (
         <div className="mb-6">
-          <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-4 gap-4 mb-6">
             {categories.map((category) => {
               const isSelected =
                 selectedCategoryLabel !== null &&
@@ -509,20 +507,6 @@ const BrowseNumbers = () => {
           )}
         </div>
       )}
-
-      <div className="flex justify-center gap-2">
-        {[1, 2, 3].map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              currentPage === page
-                ? "bg-[#FFD700] w-6"
-                : "bg-white/30 hover:bg-white/50"
-            }`}
-          />
-        ))}
-      </div>
     </div>
   );
 };
