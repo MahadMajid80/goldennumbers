@@ -128,9 +128,16 @@ const PremiumNumbersTable = () => {
                             {num.number}
                           </p>
                           {num.categoryId && num.categoryId.length > 0 && (
-                            <span className="inline-block mt-2 text-sm font-bold text-gray-300">
-                              {num.categoryId.map((cat) => cat.name).join(", ")}
-                            </span>
+                            <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-full">
+                              {num.categoryId.map((cat) => (
+                                <span
+                                  key={cat._id}
+                                  className="bg-[#FFD700] text-black px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0"
+                                >
+                                  {cat.name}
+                                </span>
+                              ))}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -205,9 +212,16 @@ const PremiumNumbersTable = () => {
                     {num.number}
                   </p>
                       {num.categoryId && num.categoryId.length > 0 && (
-                  <span className="inline-block mt-2 text-sm font-bold text-gray-300">
-                          {num.categoryId.map((cat) => cat.name).join(", ")}
-                  </span>
+                        <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-full">
+                          {num.categoryId.map((cat) => (
+                            <span
+                              key={cat._id}
+                              className="bg-[#FFD700] text-black px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0"
+                            >
+                              {cat.name}
+                            </span>
+                          ))}
+                        </div>
                       )}
                 </div>
               </div>
