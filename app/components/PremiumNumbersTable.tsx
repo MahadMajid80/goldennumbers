@@ -123,12 +123,12 @@ const PremiumNumbersTable = () => {
                             </p>
                           )}
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <p className="text-2xl font-bold text-[#FFD700] group-hover:text-[#FFA500] group-active:text-[#FFA500] transition-colors duration-300">
                             {num.number}
                           </p>
                           {num.categoryId && num.categoryId.length > 0 && (
-                            <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-full">
+                            <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide w-full min-w-0">
                               {num.categoryId.map((cat) => (
                                 <span
                                   key={cat._id}
@@ -186,7 +186,7 @@ const PremiumNumbersTable = () => {
               {premiumNumbers.map((num, index) => (
                 <div
                   key={num._id}
-                  className="bg-gray-800 rounded-lg p-6 border-2 border-[#FFD700] shadow-lg hover:shadow-2xl hover:scale-[1.02] active:shadow-2xl active:scale-[1.02] transition-all duration-300 cursor-pointer group animate-fade-in"
+                  className="bg-gray-800 rounded-lg p-6 border-2 border-[#FFD700] shadow-lg hover:shadow-2xl hover:scale-[1.02] active:shadow-2xl active:scale-[1.02] transition-all duration-300 cursor-pointer group animate-fade-in overflow-hidden"
                   style={{
                     animationDelay: `${index * 100}ms`,
                   }}
@@ -207,12 +207,12 @@ const PremiumNumbersTable = () => {
                     </p>
                   )}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p className="text-2xl font-bold text-[#FFD700] group-hover:text-[#FFA500] transition-colors duration-300">
                     {num.number}
                   </p>
                       {num.categoryId && num.categoryId.length > 0 && (
-                        <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide max-w-full">
+                        <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide w-full min-w-0">
                           {num.categoryId.map((cat) => (
                             <span
                               key={cat._id}
