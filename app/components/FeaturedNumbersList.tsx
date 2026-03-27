@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import CallPreviewModal from "./CallPreviewModal";
 import DeviceSelector, { DeviceType } from "./DeviceSelector";
@@ -53,11 +53,36 @@ const FeaturedNumbersList = ({
   const [previewNumber, setPreviewNumber] = useState<NumberItem | null>(null);
   const [selectedDevice, setSelectedDevice] =
     useState<DeviceType>("iphone-14-pro-max");
+  const categorySliderRef = useRef<HTMLDivElement>(null);
+  const hasAutoSlidCategoryRef = useRef(false);
 
   useEffect(() => {
     fetchNumbers();
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (hasAutoSlidCategoryRef.current) return;
+    if (typeof window === "undefined" || window.innerWidth >= 768) return;
+
+    const slider = categorySliderRef.current;
+    if (!slider) return;
+
+    const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+    if (maxScrollLeft <= 0) return;
+
+    const timer = window.setTimeout(() => {
+      slider.scrollTo({
+        left: maxScrollLeft,
+        behavior: "smooth",
+      });
+      hasAutoSlidCategoryRef.current = true;
+    }, 500);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [categories.length]);
 
   const fetchNumbers = async () => {
     try {
@@ -272,7 +297,7 @@ const FeaturedNumbersList = ({
           </button>
         </div>
         <div className="mb-6 md:mb-6 border border-gray-700/60 rounded-lg px-3 py-2 md:border-0 md:rounded-none md:px-0 md:py-0">
-          <div className="overflow-x-auto scrollbar-hide">
+          <div ref={categorySliderRef} className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-2 min-w-max pb-2">
               {filters.map((filter) => (
                 <button

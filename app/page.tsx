@@ -34,7 +34,7 @@ export default function Home() {
     <div className="min-h-screen">
       {isInitialLoading && (
         <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
-          <div className="flex flex-col items-center gap-5">
+          <div className="flex items-center justify-center">
             <div className="relative w-16 h-16 flex items-center justify-center">
               <div className="absolute inset-0 border-4 border-gray-700 border-t-[#FFD700] rounded-full animate-spin"></div>
               <Image
@@ -46,9 +46,6 @@ export default function Home() {
                 priority
               />
             </div>
-            <p className="text-white font-semibold tracking-wide">
-              Loading Golden Numbers...
-            </p>
           </div>
         </div>
       )}

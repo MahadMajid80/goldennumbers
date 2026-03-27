@@ -166,7 +166,7 @@ const PremiumNumbersTable = () => {
                           <>
                             <button 
                               onClick={openWhatsApp}
-                              className="bg-[#FFD700] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#FFA500] active:bg-[#FFA500] transition-all duration-300 group-hover:scale-105 active:scale-105 shadow-lg"
+                              className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#FFA500] active:bg-[#FFA500] transition-all duration-300 group-hover:scale-105 active:scale-105 shadow-lg"
                             >
                               Buy Now
                             </button>
@@ -250,7 +250,7 @@ const PremiumNumbersTable = () => {
                   <>
                     <button 
                       onClick={openWhatsApp}
-                      className="bg-[#FFD700] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#FFA500] transition-all duration-300 group-hover:scale-105 shadow-lg"
+                      className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#FFA500] transition-all duration-300 group-hover:scale-105 shadow-lg"
                     >
                       Buy Now
                     </button>

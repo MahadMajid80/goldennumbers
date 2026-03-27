@@ -42,6 +42,12 @@ const categories: CategoryCard[] = [
   { id: "silver", icon: "/Icons-3/Text Title 3.png", label: "Silver" },
 ];
 
+const categoryAliasesById: Record<string, string[]> = {
+  "all-digit": ["0300", "all digit", "all-digits", "all digit numbers"],
+  uan: ["uan", "golden"],
+  silver: ["0321", "silver", "silver numbers"],
+};
+
 const BrowseNumbers = () => {
   const [activeFilter, setActiveFilter] = useState<FilterType>("Category");
   const [minBudget, setMinBudget] = useState(20);
@@ -71,6 +77,11 @@ const BrowseNumbers = () => {
 
   const normalizeCategoryName = (name: string): string =>
     name.trim().toLowerCase().replace(/\s+/g, " ");
+
+  const getCategoryMatchCandidates = (category: CategoryCard): string[] => {
+    const aliasCandidates = categoryAliasesById[category.id] ?? [];
+    return [category.label, ...aliasCandidates];
+  };
 
   const ensureCategoriesLoaded = async (): Promise<CategoryApiItem[]> => {
     if (categoryApiItems.length > 0) {
@@ -451,10 +462,13 @@ const BrowseNumbers = () => {
                     try {
                       setSelectedCategoryLabel(category.label);
                       const apiCats = await ensureCategoriesLoaded();
-                      const match = apiCats.find(
-                        (c) =>
-                          normalizeCategoryName(c.name) ===
-                          normalizeCategoryName(category.label),
+                      const normalizedCandidates = getCategoryMatchCandidates(
+                        category,
+                      ).map(normalizeCategoryName);
+                      const match = apiCats.find((c) =>
+                        normalizedCandidates.includes(
+                          normalizeCategoryName(c.name),
+                        ),
                       );
 
                       if (!match) {
