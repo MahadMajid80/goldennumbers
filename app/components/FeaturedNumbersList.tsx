@@ -302,7 +302,7 @@ const FeaturedNumbersList = ({
           <div>
             {filteredNumbers.length > 8 ? (
               <div
-                className="max-h-[392px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
+                className="max-h-[380px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#4B5563 #1F2937",
