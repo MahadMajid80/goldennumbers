@@ -32,7 +32,7 @@ export default function Home() {
           maxPrice={maxPrice}
           setMaxPrice={setMaxPrice}
         />
-        <div className="container mx-auto px-4 pt-2 pb-8">
+        <div className="pt-2 pb-8">
           <div className="mb-8">
             <div className="space-y-2 md:space-y-8">
               <FeaturedNumbersList

@@ -151,7 +151,7 @@ const FeaturedNumbersList = ({
 
   return (
     <div>
-      <div className="px-6 pt-2 pb-6">
+      <div className="container mx-auto px-4 pt-2 pb-6">
         <div className="hidden md:flex flex-wrap items-center justify-center gap-4 mb-6 border-2 border-[#FFD700] rounded-lg p-4">
           <div className="transition-all duration-300">
             <Image
