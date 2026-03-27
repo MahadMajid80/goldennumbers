@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Header from "./components/Header";
 import SearchBanner from "./components/SearchBanner";
 import FeaturedNumbersList from "./components/FeaturedNumbersList";
@@ -33,8 +34,18 @@ export default function Home() {
     <div className="min-h-screen">
       {isInitialLoading && (
         <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-14 h-14 border-4 border-gray-700 border-t-[#FFD700] rounded-full animate-spin"></div>
+          <div className="flex flex-col items-center gap-5">
+            <div className="relative w-16 h-16 flex items-center justify-center">
+              <div className="absolute inset-0 border-4 border-gray-700 border-t-[#FFD700] rounded-full animate-spin"></div>
+              <Image
+                src="/Golden numbers Hub Logo White  (1).png"
+                alt="Golden Numbers Logo"
+                width={44}
+                height={44}
+                className="object-contain"
+                priority
+              />
+            </div>
             <p className="text-white font-semibold tracking-wide">
               Loading Golden Numbers...
             </p>
