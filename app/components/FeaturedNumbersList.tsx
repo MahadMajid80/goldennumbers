@@ -302,7 +302,7 @@ const FeaturedNumbersList = ({
           <div>
             {filteredNumbers.length > 8 ? (
               <div
-                className="max-h-[460px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
+                className="max-h-[392px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#4B5563 #1F2937",
@@ -489,7 +489,7 @@ const FeaturedNumbersList = ({
               <div
                 className={`${
                   filteredNumbers.length > 4
-                    ? "max-h-[460px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-none md:overflow-visible md:pr-0"
+                    ? "max-h-[392px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-none md:overflow-visible md:pr-0"
                     : ""
                 }`}
                 style={{
