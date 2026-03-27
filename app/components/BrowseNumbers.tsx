@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { openDialer } from "./utils";
 
 type FilterType = "Category" | "Budget";
 
@@ -33,7 +34,11 @@ const categories: CategoryCard[] = [
   { id: "golden", icon: "/Icons-3/Text Title 5.png", label: "Golden" },
   { id: "penta", icon: "/Icons-3/Text Title 8.png", label: "Penta" },
   { id: "786", icon: "/Icons-3/Text Title 1.png", label: "786" },
-  { id: "master-code", icon: "/Icons-3/Text Title 11.png", label: "Master Code" },
+  {
+    id: "master-code",
+    icon: "/Icons-3/Text Title 11.png",
+    label: "Master Code",
+  },
   { id: "silver", icon: "/Icons-3/Text Title 3.png", label: "Silver" },
 ];
 
@@ -44,8 +49,12 @@ const BrowseNumbers = () => {
   const [budgetNumbers, setBudgetNumbers] = useState<NumberItem[]>([]);
   const [budgetLoading, setBudgetLoading] = useState(false);
   const [budgetError, setBudgetError] = useState<string | null>(null);
-  const [categoryApiItems, setCategoryApiItems] = useState<CategoryApiItem[]>([]);
-  const [selectedCategoryLabel, setSelectedCategoryLabel] = useState<string | null>(null);
+  const [categoryApiItems, setCategoryApiItems] = useState<CategoryApiItem[]>(
+    [],
+  );
+  const [selectedCategoryLabel, setSelectedCategoryLabel] = useState<
+    string | null
+  >(null);
   const [categoryNumbers, setCategoryNumbers] = useState<NumberItem[]>([]);
   const [categoryLoading, setCategoryLoading] = useState(false);
   const [categoryError, setCategoryError] = useState<string | null>(null);
@@ -72,11 +81,13 @@ const BrowseNumbers = () => {
     if (!response.ok) {
       const errorData = await response
         .json()
-        .catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+        .catch(() => ({
+          error: `HTTP ${response.status}: ${response.statusText}`,
+        }));
       console.error(
         "Error fetching categories:",
         errorData.error,
-        errorData.details ? `Details: ${errorData.details}` : ""
+        errorData.details ? `Details: ${errorData.details}` : "",
       );
       throw new Error("Unable to load categories.");
     }
@@ -96,7 +107,10 @@ const BrowseNumbers = () => {
           typeof (item as { _id?: unknown })._id === "string" &&
           typeof (item as { name?: unknown }).name === "string"
         ) {
-          return { _id: (item as { _id: string })._id, name: (item as { name: string }).name };
+          return {
+            _id: (item as { _id: string })._id,
+            name: (item as { name: string }).name,
+          };
         }
         return null;
       })
@@ -112,15 +126,19 @@ const BrowseNumbers = () => {
       setCategoryError(null);
       setCategoryNumbers([]);
 
-      const response = await fetch(`/api/numbers?category=${encodeURIComponent(categoryId)}`);
+      const response = await fetch(
+        `/api/numbers?category=${encodeURIComponent(categoryId)}`,
+      );
       if (!response.ok) {
         const errorData = await response
           .json()
-          .catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+          .catch(() => ({
+            error: `HTTP ${response.status}: ${response.statusText}`,
+          }));
         console.error(
           "Error fetching category numbers:",
           errorData.error,
-          errorData.details ? `Details: ${errorData.details}` : ""
+          errorData.details ? `Details: ${errorData.details}` : "",
         );
         setCategoryError("Unable to load numbers for this category.");
         return;
@@ -138,7 +156,7 @@ const BrowseNumbers = () => {
         console.error(
           "Error fetching category numbers:",
           err,
-          typeof details === "string" ? `Details: ${details}` : ""
+          typeof details === "string" ? `Details: ${details}` : "",
         );
         setCategoryError("Unable to load numbers for this category.");
         return;
@@ -179,19 +197,17 @@ const BrowseNumbers = () => {
         const maxPrice = budgetToPrice(maxBudget);
 
         const response = await fetch(
-          `/api/numbers?minPrice=${minPrice}&maxPrice=${maxPrice}`
+          `/api/numbers?minPrice=${minPrice}&maxPrice=${maxPrice}`,
         );
 
         if (!response.ok) {
-          const errorData = await response
-            .json()
-            .catch(() => ({
-              error: `HTTP ${response.status}: ${response.statusText}`,
-            }));
+          const errorData = await response.json().catch(() => ({
+            error: `HTTP ${response.status}: ${response.statusText}`,
+          }));
           console.error(
             "Error fetching budget numbers:",
             errorData.error,
-            errorData.details ? `Details: ${errorData.details}` : ""
+            errorData.details ? `Details: ${errorData.details}` : "",
           );
           setBudgetNumbers([]);
           setBudgetError("Unable to load numbers for this budget range.");
@@ -203,7 +219,7 @@ const BrowseNumbers = () => {
           console.error(
             "Error fetching budget numbers:",
             data.error,
-            data.details ? `Details: ${data.details}` : ""
+            data.details ? `Details: ${data.details}` : "",
           );
           setBudgetNumbers([]);
           setBudgetError("Unable to load numbers for this budget range.");
@@ -251,8 +267,10 @@ const BrowseNumbers = () => {
 
       {activeFilter === "Budget" && (
         <div className="mb-8">
-          <h3 className="text-white text-lg font-semibold mb-6">Budget Range</h3>
-          
+          <h3 className="text-white text-lg font-semibold mb-6">
+            Budget Range
+          </h3>
+
           <div className="relative mb-6">
             <div className="relative h-2 bg-gray-700 rounded-full">
               <div
@@ -262,7 +280,7 @@ const BrowseNumbers = () => {
                   width: `${maxBudget - minBudget}%`,
                 }}
               ></div>
-              
+
               <div className="absolute flex justify-between w-full -bottom-6">
                 <span className="text-white text-sm">
                   Rs {formatPrice(budgetToPrice(minBudget))}
@@ -272,7 +290,7 @@ const BrowseNumbers = () => {
                 </span>
               </div>
             </div>
-            
+
             <div className="relative mt-8">
               <div className="relative w-full">
                 <input
@@ -283,12 +301,16 @@ const BrowseNumbers = () => {
                   value={minBudget}
                   onChange={(e) => handleMinChange(Number(e.target.value))}
                   onPointerDown={() => {
-                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "30";
-                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "20";
+                    if (minRangeRef.current)
+                      minRangeRef.current.style.zIndex = "30";
+                    if (maxRangeRef.current)
+                      maxRangeRef.current.style.zIndex = "20";
                   }}
                   onMouseDown={() => {
-                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "30";
-                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "20";
+                    if (minRangeRef.current)
+                      minRangeRef.current.style.zIndex = "30";
+                    if (maxRangeRef.current)
+                      maxRangeRef.current.style.zIndex = "20";
                   }}
                   className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer z-20 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-black [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
                 />
@@ -300,18 +322,22 @@ const BrowseNumbers = () => {
                   value={maxBudget}
                   onChange={(e) => handleMaxChange(Number(e.target.value))}
                   onPointerDown={() => {
-                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "30";
-                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "20";
+                    if (maxRangeRef.current)
+                      maxRangeRef.current.style.zIndex = "30";
+                    if (minRangeRef.current)
+                      minRangeRef.current.style.zIndex = "20";
                   }}
                   onMouseDown={() => {
-                    if (maxRangeRef.current) maxRangeRef.current.style.zIndex = "30";
-                    if (minRangeRef.current) minRangeRef.current.style.zIndex = "20";
+                    if (maxRangeRef.current)
+                      maxRangeRef.current.style.zIndex = "30";
+                    if (minRangeRef.current)
+                      minRangeRef.current.style.zIndex = "20";
                   }}
                   className="absolute w-full h-2 bg-transparent appearance-none cursor-pointer z-30 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-black [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
                 />
               </div>
             </div>
-            
+
             <div className="flex justify-between mt-18">
               <div className="flex items-center gap-2">
                 <span className="text-white">From</span>
@@ -323,7 +349,7 @@ const BrowseNumbers = () => {
                     if (Number.isNaN(raw) || raw < 0) return;
                     const percentage = Math.min(
                       100,
-                      Math.max(0, (raw / 1_000_000) * 100)
+                      Math.max(0, (raw / 1_000_000) * 100),
                     );
                     if (percentage <= maxBudget) {
                       setMinBudget(percentage);
@@ -344,7 +370,7 @@ const BrowseNumbers = () => {
                     if (Number.isNaN(raw) || raw < 0) return;
                     const percentage = Math.min(
                       100,
-                      Math.max(0, (raw / 1_000_000) * 100)
+                      Math.max(0, (raw / 1_000_000) * 100),
                     );
                     if (percentage >= minBudget) {
                       setMaxBudget(percentage);
@@ -419,13 +445,13 @@ const BrowseNumbers = () => {
                       const match = apiCats.find(
                         (c) =>
                           normalizeCategoryName(c.name) ===
-                          normalizeCategoryName(category.label)
+                          normalizeCategoryName(category.label),
                       );
 
                       if (!match) {
                         setCategoryNumbers([]);
                         setCategoryError(
-                          `Category "${category.label}" not found in database.`
+                          `Category "${category.label}" not found in database.`,
                         );
                         return;
                       }
@@ -493,9 +519,18 @@ const BrowseNumbers = () => {
                         <p className="text-xl font-bold text-[#FFD700] mb-2">
                           {item.number}
                         </p>
-                        <p className="text-sm font-semibold text-gray-300">
-                          {item.price}
-                        </p>
+                        <div className="flex items-center justify-between gap-3 mt-3">
+                          <p className="text-sm font-semibold text-gray-300">
+                            {item.price}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => openDialer(item.number)}
+                            className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-xs font-semibold hover:bg-[#FFA500] transition-colors"
+                          >
+                            Buy Now
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -509,4 +544,3 @@ const BrowseNumbers = () => {
 };
 
 export default BrowseNumbers;
-
