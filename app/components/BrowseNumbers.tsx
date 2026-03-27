@@ -414,9 +414,18 @@ const BrowseNumbers = () => {
                     <p className="text-xl font-bold text-[#FFD700] mb-2">
                       {item.number}
                     </p>
-                    <p className="text-sm font-semibold text-gray-300">
-                      {item.price}
-                    </p>
+                    <div className="flex items-center justify-between gap-3 mt-3">
+                      <p className="text-sm font-semibold text-gray-300">
+                        {item.price}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => openDialer(item.number)}
+                        className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-xs font-semibold hover:bg-[#FFA500] transition-colors"
+                      >
+                        Buy Now
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
