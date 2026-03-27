@@ -302,7 +302,7 @@ const FeaturedNumbersList = ({
           <div>
             {filteredNumbers.length > 8 ? (
               <div
-                className="max-h-[340px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
+                className="max-h-[420px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#4B5563 #1F2937",
@@ -312,25 +312,25 @@ const FeaturedNumbersList = ({
                   {filteredNumbers.map((item) => (
                     <div
                       key={item._id}
-                      className="bg-gray-800 rounded-lg px-3 py-2 md:px-5 md:py-5 flex flex-col md:flex-row items-center justify-between gap-1 md:gap-4 hover:bg-gray-750 transition-all duration-300"
+                      className="bg-gray-800 rounded-lg px-3 py-3 md:px-5 md:py-5 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4 hover:bg-gray-750 transition-all duration-300"
                     >
                       {/* Mobile Layout */}
                       <div className="w-full md:hidden flex items-center justify-between gap-2">
                         {/* Left side: Logo */}
                         <div className="flex-shrink-0">
-                          <div className="w-10 h-10 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
+                          <div className="w-12 h-12 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
                             <Image
                               src={getNetworkLogo(item.network)}
                               alt={item.network}
-                              width={40}
-                              height={40}
+                              width={48}
+                              height={48}
                               className="object-contain w-full h-full p-1"
                             />
                           </div>
                         </div>
                         {/* Middle: Number and Exclusive Button */}
                         <div className="flex flex-col flex-1 min-w-0">
-                          <p className="text-sm font-bold text-white mb-0.5 leading-tight whitespace-nowrap">
+                          <p className="text-[1.65rem] font-bold text-white mb-0.5 leading-tight whitespace-nowrap">
                             {item.number}
                           </p>
                           {item.categoryId && item.categoryId.length > 0 && (
@@ -338,7 +338,7 @@ const FeaturedNumbersList = ({
                               {item.categoryId.map((cat) => (
                                 <span
                                   key={cat._id}
-                                  className="bg-[#FFD700] text-black px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
+                                  className="bg-[#FFD700] text-black px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0"
                                 >
                                   {cat.name}
                                 </span>
@@ -348,16 +348,16 @@ const FeaturedNumbersList = ({
                         </div>
                         {/* Right side: Price and Action Buttons */}
                         <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                          <p className="text-xs font-bold text-white leading-tight whitespace-nowrap">
+                          <p className="text-3xl font-bold text-white leading-tight whitespace-nowrap">
                             {item.price}
                           </p>
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-2">
                             <button
                               onClick={openWhatsApp}
-                              className="bg-green-500 w-6 h-6 rounded-md flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
+                              className="bg-green-500 w-9 h-9 rounded-md flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
                             >
                               <svg
-                                className="w-3 h-3 text-white"
+                                className="w-4 h-4 text-white"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                               >
@@ -366,10 +366,10 @@ const FeaturedNumbersList = ({
                             </button>
                             <button
                               onClick={openWhatsApp}
-                              className="bg-yellow-400 w-6 h-6 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
+                              className="bg-yellow-400 w-9 h-9 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                             >
                               <svg
-                                className="w-3 h-3 text-black"
+                                className="w-4 h-4 text-black"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -485,29 +485,41 @@ const FeaturedNumbersList = ({
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-4">
+              <div
+                className={`${
+                  filteredNumbers.length > 4
+                    ? "max-h-[420px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-none md:overflow-visible md:pr-0"
+                    : ""
+                }`}
+                style={{
+                  scrollbarWidth: filteredNumbers.length > 4 ? "thin" : undefined,
+                  scrollbarColor:
+                    filteredNumbers.length > 4 ? "#4B5563 #1F2937" : undefined,
+                }}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-4">
                 {filteredNumbers.map((item) => (
                   <div
                     key={item._id}
-                    className="bg-gray-800 rounded-lg px-3 py-2 md:px-5 md:py-5 flex flex-col md:flex-row items-center justify-between gap-1 md:gap-4 hover:bg-gray-750 transition-all duration-300"
+                    className="bg-gray-800 rounded-lg px-3 py-3 md:px-5 md:py-5 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4 hover:bg-gray-750 transition-all duration-300"
                   >
                     {/* Mobile Layout */}
                     <div className="w-full md:hidden flex items-center justify-between gap-2">
                       {/* Left side: Logo */}
                       <div className="flex-shrink-0">
-                        <div className="w-10 h-10 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
+                        <div className="w-12 h-12 rounded-full border-2 border-[#FFD700] flex items-center justify-center overflow-hidden bg-gray-800">
                           <Image
                             src={getNetworkLogo(item.network)}
                             alt={item.network}
-                            width={40}
-                            height={40}
+                            width={48}
+                            height={48}
                             className="object-contain w-full h-full p-1"
                           />
                         </div>
                       </div>
                       {/* Middle: Number and Exclusive Button */}
                       <div className="flex flex-col flex-1 min-w-0">
-                        <p className="text-sm font-bold text-white mb-0.5 leading-tight whitespace-nowrap">
+                        <p className="text-[1.65rem] font-bold text-white mb-0.5 leading-tight whitespace-nowrap">
                           {item.number}
                         </p>
                         {item.categoryId && item.categoryId.length > 0 && (
@@ -515,7 +527,7 @@ const FeaturedNumbersList = ({
                             {item.categoryId.map((cat) => (
                               <span
                                 key={cat._id}
-                                className="bg-[#FFD700] text-black px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap flex-shrink-0"
+                                className="bg-[#FFD700] text-black px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0"
                               >
                                 {cat.name}
                               </span>
@@ -525,16 +537,16 @@ const FeaturedNumbersList = ({
                       </div>
                       {/* Right side: Price and Action Buttons */}
                       <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                        <p className="text-xs font-bold text-white leading-tight whitespace-nowrap">
+                        <p className="text-3xl font-bold text-white leading-tight whitespace-nowrap">
                           {item.price}
                         </p>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={openWhatsApp}
-                            className="bg-green-500 w-6 h-6 rounded-md flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
+                            className="bg-green-500 w-9 h-9 rounded-md flex items-center justify-center hover:bg-green-600 active:bg-green-600 transition-colors"
                           >
                             <svg
-                              className="w-3 h-3 text-white"
+                              className="w-4 h-4 text-white"
                               fill="currentColor"
                               viewBox="0 0 24 24"
                             >
@@ -543,10 +555,10 @@ const FeaturedNumbersList = ({
                           </button>
                           <button
                             onClick={openWhatsApp}
-                            className="bg-yellow-400 w-6 h-6 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
+                            className="bg-yellow-400 w-9 h-9 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                           >
                             <svg
-                              className="w-3 h-3 text-black"
+                              className="w-4 h-4 text-black"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -653,6 +665,7 @@ const FeaturedNumbersList = ({
                     </div>
                   </div>
                 ))}
+                </div>
               </div>
             )}
           </div>
