@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import CallPreviewModal from "./CallPreviewModal";
 import DeviceSelector, { DeviceType } from "./DeviceSelector";
-import { openWhatsApp } from "./utils";
+import { openWhatsApp, openDialer } from "./utils";
 
 type Category = {
   _id: string;
@@ -365,7 +365,7 @@ const FeaturedNumbersList = ({
                                 </svg>
                               </button>
                               <button
-                                onClick={openWhatsApp}
+                                onClick={() => openDialer(item.number)}
                                 className="bg-yellow-400 w-9 h-9 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                               >
                                 <svg
@@ -428,7 +428,7 @@ const FeaturedNumbersList = ({
                           </svg>
                         </button>
                         <button
-                          onClick={openWhatsApp}
+                          onClick={() => openDialer(item.number)}
                           className="bg-yellow-400 p-2 rounded-full hover:bg-yellow-500 transition-colors"
                         >
                           <svg
@@ -555,7 +555,7 @@ const FeaturedNumbersList = ({
                               </svg>
                             </button>
                             <button
-                              onClick={openWhatsApp}
+                              onClick={() => openDialer(item.number)}
                               className="bg-yellow-400 w-9 h-9 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                             >
                               <svg
@@ -614,7 +614,10 @@ const FeaturedNumbersList = ({
                           <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                         </svg>
                       </button>
-                      <button className="bg-yellow-400 p-2 rounded-full hover:bg-yellow-500 transition-colors">
+                      <button
+                        onClick={() => openDialer(item.number)}
+                        className="bg-yellow-400 p-2 rounded-full hover:bg-yellow-500 transition-colors"
+                      >
                         <svg
                           className="w-5 h-5 text-black"
                           fill="none"

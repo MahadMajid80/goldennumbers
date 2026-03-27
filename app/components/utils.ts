@@ -7,3 +7,12 @@ export const openWhatsApp = (): void => {
   window.open(whatsappUrl, "_blank");
 };
 
+export const openDialer = (phoneNumber: string): void => {
+  if (typeof window === "undefined") return;
+
+  const normalizedNumber = phoneNumber.replace(/[^\d+]/g, "");
+  if (!normalizedNumber) return;
+
+  window.location.href = `tel:${normalizedNumber}`;
+};
+
