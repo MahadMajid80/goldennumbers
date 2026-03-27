@@ -72,11 +72,30 @@ const FeaturedNumbersList = ({
     if (maxScrollLeft <= 0) return;
 
     const timer = window.setTimeout(() => {
-      slider.scrollTo({
-        left: maxScrollLeft,
-        behavior: "smooth",
-      });
-      hasAutoSlidCategoryRef.current = true;
+      const start = slider.scrollLeft;
+      const distance = maxScrollLeft - start;
+      const durationMs = 2800;
+      const animationStart = performance.now();
+
+      const step = (now: number) => {
+        const elapsed = now - animationStart;
+        const progress = Math.min(elapsed / durationMs, 1);
+        // Ease-in-out so the cue looks deliberate.
+        const easedProgress =
+          progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+        slider.scrollLeft = start + distance * easedProgress;
+
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          hasAutoSlidCategoryRef.current = true;
+        }
+      };
+
+      window.requestAnimationFrame(step);
     }, 500);
 
     return () => {
