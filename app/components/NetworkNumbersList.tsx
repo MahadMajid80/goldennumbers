@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import CallPreviewModal from "./CallPreviewModal";
 import DeviceSelector, { DeviceType } from "./DeviceSelector";
-import { openWhatsApp } from "./utils";
+import { openWhatsApp, openDialer } from "./utils";
 
 type NumberItem = {
   _id: string;
@@ -192,7 +192,7 @@ const NetworkNumbersList = ({ network }: NetworkNumbersListProps) => {
                       </svg>
                     </button>
                     <button 
-                      onClick={openWhatsApp}
+                      onClick={() => openDialer(item.number)}
                       className="bg-yellow-400 p-2 rounded-full hover:bg-yellow-500 transition-colors"
                     >
                       <svg
