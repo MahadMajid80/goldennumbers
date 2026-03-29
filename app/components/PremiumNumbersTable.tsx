@@ -144,7 +144,7 @@ const PremiumNumbersTable = () => {
                       <div className="flex-shrink-0 flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
                         {num.price === "Price On Call" ? (
                           <button 
-                            onClick={() => openDialer(num.number)}
+                            onClick={() => openDialer()}
                             className="bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 active:bg-gray-800 transition-all duration-300 flex items-center gap-2 group-hover:scale-105 active:scale-105 shadow-lg"
                           >
                             <svg
@@ -228,7 +228,7 @@ const PremiumNumbersTable = () => {
               <div className="flex-shrink-0 flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
                 {num.price === "Price On Call" ? (
                   <button 
-                    onClick={() => openDialer(num.number)}
+                    onClick={() => openDialer()}
                     className="bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 flex items-center gap-2 group-hover:scale-105 shadow-lg"
                   >
                     <svg

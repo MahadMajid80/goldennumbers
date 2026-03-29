@@ -187,7 +187,7 @@ const FeaturedNumbersCards = () => {
                 )}
                 {item.price === "Price On Call" && (
                   <button
-                    onClick={() => openDialer(item.number)}
+                    onClick={() => openDialer()}
                     className="bg-black text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-gray-800 transition-colors duration-300 flex items-center gap-2"
                   >
                     <svg
@@ -260,7 +260,7 @@ const FeaturedNumbersCards = () => {
                 )}
                 {item.price === "Price On Call" && (
                   <button 
-                    onClick={() => openDialer(item.number)}
+                    onClick={() => openDialer()}
                     className="bg-black text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors duration-300 flex items-center gap-2"
                   >
                     <svg
@@ -323,7 +323,7 @@ const FeaturedNumbersCards = () => {
                 )}
                 {item.price === "Price On Call" && (
                   <button 
-                    onClick={() => openDialer(item.number)}
+                    onClick={() => openDialer()}
                     className="bg-black text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors duration-300 flex items-center gap-2"
                   >
                     <svg

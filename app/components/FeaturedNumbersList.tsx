@@ -71,35 +71,55 @@ const FeaturedNumbersList = ({
     const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
     if (maxScrollLeft <= 0) return;
 
-    const timer = window.setTimeout(() => {
-      const start = slider.scrollLeft;
-      const distance = maxScrollLeft - start;
-      const durationMs = 2800;
+    let rafId = 0;
+    let aborted = false;
+
+    const easeInOut = (t: number): number =>
+      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+    const animateScroll = (
+      from: number,
+      to: number,
+      durationMs: number,
+      onComplete: () => void,
+    ) => {
       const animationStart = performance.now();
+      const distance = to - from;
 
       const step = (now: number) => {
+        if (aborted) return;
         const elapsed = now - animationStart;
         const progress = Math.min(elapsed / durationMs, 1);
-        // Ease-in-out so the cue looks deliberate.
-        const easedProgress =
-          progress < 0.5
-            ? 2 * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-        slider.scrollLeft = start + distance * easedProgress;
+        const easedProgress = easeInOut(progress);
+        slider.scrollLeft = from + distance * easedProgress;
 
         if (progress < 1) {
-          window.requestAnimationFrame(step);
+          rafId = window.requestAnimationFrame(step);
         } else {
-          hasAutoSlidCategoryRef.current = true;
+          onComplete();
         }
       };
 
-      window.requestAnimationFrame(step);
+      rafId = window.requestAnimationFrame(step);
+    };
+
+    const durationMs = 2800;
+    const timer = window.setTimeout(() => {
+      const start = slider.scrollLeft;
+      animateScroll(start, maxScrollLeft, durationMs, () => {
+        if (aborted) return;
+        animateScroll(maxScrollLeft, start, durationMs, () => {
+          if (!aborted) {
+            hasAutoSlidCategoryRef.current = true;
+          }
+        });
+      });
     }, 500);
 
     return () => {
+      aborted = true;
       window.clearTimeout(timer);
+      window.cancelAnimationFrame(rafId);
     };
   }, [categories.length]);
 
@@ -409,7 +429,7 @@ const FeaturedNumbersList = ({
                                 </svg>
                               </button>
                               <button
-                                onClick={() => openDialer(item.number)}
+                                onClick={() => openDialer()}
                                 className="bg-yellow-400 w-9 h-9 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                               >
                                 <svg
@@ -472,7 +492,7 @@ const FeaturedNumbersList = ({
                           </svg>
                         </button>
                         <button
-                          onClick={() => openDialer(item.number)}
+                          onClick={() => openDialer()}
                           className="bg-yellow-400 p-2 rounded-full hover:bg-yellow-500 transition-colors"
                         >
                           <svg
@@ -599,7 +619,7 @@ const FeaturedNumbersList = ({
                               </svg>
                             </button>
                             <button
-                              onClick={() => openDialer(item.number)}
+                              onClick={() => openDialer()}
                               className="bg-yellow-400 w-9 h-9 rounded-md flex items-center justify-center hover:bg-yellow-500 active:bg-yellow-500 transition-colors"
                             >
                               <svg
@@ -659,7 +679,7 @@ const FeaturedNumbersList = ({
                         </svg>
                       </button>
                       <button
-                        onClick={() => openDialer(item.number)}
+                        onClick={() => openDialer()}
                         className="bg-yellow-400 p-2 rounded-full hover:bg-yellow-500 transition-colors"
                       >
                         <svg

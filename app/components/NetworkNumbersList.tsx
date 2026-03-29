@@ -192,7 +192,7 @@ const NetworkNumbersList = ({ network }: NetworkNumbersListProps) => {
                       </svg>
                     </button>
                     <button 
-                      onClick={() => openDialer(item.number)}
+                      onClick={() => openDialer()}
                       className="bg-yellow-400 p-2 rounded-full hover:bg-yellow-500 transition-colors"
                     >
                       <svg

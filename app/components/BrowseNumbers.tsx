@@ -431,7 +431,7 @@ const BrowseNumbers = () => {
                       </p>
                       <button
                         type="button"
-                        onClick={() => openDialer(item.number)}
+                        onClick={() => openDialer()}
                         className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-xs font-semibold hover:bg-[#FFA500] transition-colors"
                       >
                         Buy Now
@@ -548,7 +548,7 @@ const BrowseNumbers = () => {
                           </p>
                           <button
                             type="button"
-                            onClick={() => openDialer(item.number)}
+                            onClick={() => openDialer()}
                             className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-xs font-semibold hover:bg-[#FFA500] transition-colors"
                           >
                             Buy Now
