@@ -165,58 +165,26 @@ const NumberModal = ({
     });
   };
 
-  const formatPhoneNumber = (value: string, previousValue?: string): string => {
-    // Remove all non-digits to get the actual digit count
-    const digitsOnly = value.replace(/\D/g, "");
-    const previousDigitsOnly = previousValue
-      ? previousValue.replace(/\D/g, "")
-      : "";
+  const formatPhoneNumber = (value: string): string => {
+    // Allow digits, spaces, and hyphens while typing.
+    const cleaned = value.replace(/[^\d\s-]/g, "");
 
-    // If 4 digits or less, no space needed
-    if (digitsOnly.length <= 4) {
-      return digitsOnly;
+    // If user manually uses separators, preserve that input style.
+    if (cleaned.includes(" ") || cleaned.includes("-")) {
+      return cleaned
+        .replace(/\s{2,}/g, " ")
+        .replace(/-{2,}/g, "-")
+        .replace(/^[-\s]+/, "");
     }
 
-    // Check if user is typing (adding characters) or deleting
-    const isTyping = digitsOnly.length > previousDigitsOnly.length;
-    const isDeleting = previousValue && value.length < previousValue.length;
-
-    // Check if current value has a space at position 4
-    const currentHasSpace = value.length > 4 && value[4] === " ";
-
-    // Check if previous value had a space
-    const previousHadSpace =
-      previousValue && previousValue.length > 4 && previousValue[4] === " ";
-
-    // If user deleted the space, keep it removed
-    if (isDeleting && previousHadSpace && !currentHasSpace) {
-      return digitsOnly;
-    }
-
-    // If user is typing a NEW digit (digit count increased) and there's no space
-    if (isTyping && !currentHasSpace) {
-      // Only add space if we're crossing from exactly 4 to 5+ digits
-      // This allows user to continue typing without space after removing it
-      if (previousDigitsOnly.length === 4) {
-        // User typed 5th digit, add space
-        return digitsOnly.slice(0, 4) + " " + digitsOnly.slice(4);
-      }
-      // User removed space and is continuing to type, keep it without space
-      return digitsOnly;
-    }
-
-    // If space exists, maintain the current format
-    if (currentHasSpace) {
-      return value;
-    }
-
-    // Standard case: ensure space is present after 4 digits
-    return digitsOnly.slice(0, 4) + " " + digitsOnly.slice(4);
+    // Default helper formatting: auto-add a single space after first 4 digits.
+    const digitsOnly = cleaned.replace(/\D/g, "");
+    if (digitsOnly.length <= 4) return digitsOnly;
+    return `${digitsOnly.slice(0, 4)} ${digitsOnly.slice(4)}`;
   };
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const previousValue = formData.number;
-    const formatted = formatPhoneNumber(e.target.value, previousValue);
+    const formatted = formatPhoneNumber(e.target.value);
     setFormData({ ...formData, number: formatted });
   };
 
