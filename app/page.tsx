@@ -7,7 +7,6 @@ import SearchBanner from "./components/SearchBanner";
 import FeaturedNumbersList from "./components/FeaturedNumbersList";
 import FeaturedNumbersCards from "./components/FeaturedNumbersCards";
 import FeaturedNumbersStrip from "./components/FeaturedNumbersStrip";
-import OurPackages from "./components/OurPackages";
 import BrowseNumbers from "./components/BrowseNumbers";
 import PremiumNumbersTable from "./components/PremiumNumbersTable";
 import InfoSections from "./components/InfoSections";
@@ -74,7 +73,6 @@ export default function Home() {
               <FeaturedNumbersStrip />
               <FeaturedNumbersCards />
               <PremiumNumbersTable />
-              <OurPackages />
               <BrowseNumbers />
               <InfoSections />
             </div>

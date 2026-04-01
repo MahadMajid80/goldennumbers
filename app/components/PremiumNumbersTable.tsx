@@ -60,7 +60,7 @@ const PremiumNumbersTable = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
+        <div className="mb-8 text-center">
           <div className="inline-block">
             <h2 className="text-2xl font-bold text-white mb-2">
               Premium Numbers Available
@@ -75,7 +75,7 @@ const PremiumNumbersTable = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
+      <div className="mb-8 text-center">
         <div className="inline-block">
           <h2 className="text-2xl font-bold text-white mb-2">
             Premium Numbers Available

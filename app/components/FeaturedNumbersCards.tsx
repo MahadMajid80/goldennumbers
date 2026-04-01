@@ -113,7 +113,7 @@ const FeaturedNumbersCards = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
+        <div className="mb-6 text-center">
           <div className="inline-block">
             <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
             <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
@@ -127,7 +127,7 @@ const FeaturedNumbersCards = () => {
   if (featuredNumbers.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
+        <div className="mb-6 text-center">
           <div className="inline-block">
             <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
             <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
@@ -140,7 +140,7 @@ const FeaturedNumbersCards = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
+      <div className="mb-6 text-center">
         <div className="inline-block">
           <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
           <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
