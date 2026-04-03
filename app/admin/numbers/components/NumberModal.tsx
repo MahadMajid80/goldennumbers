@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CategoryModal from "../../categories/components/CategoryModal";
+import {
+  formatAdminPhoneNumberInput,
+  shouldMergeAutoSpaceOnBackspace,
+  shouldMergeAutoSpaceOnDelete,
+} from "../../../../helpers/formatAdminPhoneNumberInput";
 
 type Number = {
   _id?: string;
@@ -67,6 +72,14 @@ const NumberModal = ({
   const [error, setError] = useState("");
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [priceOnCall, setPriceOnCall] = useState(false);
+  /** After removing the auto space, keep one continuous digit run until ≤4 digits or user adds separators/letters. */
+  const preferDigitRunWithoutSpaceRef = useRef(false);
+
+  useEffect(() => {
+    if (number === null) {
+      preferDigitRunWithoutSpaceRef.current = false;
+    }
+  }, [number]);
 
   useEffect(() => {
     if (number) {
@@ -88,8 +101,11 @@ const NumberModal = ({
         number.price === "Price On Call" ||
         number.price.toLowerCase().includes("price on call");
       setPriceOnCall(isPriceOnCall);
+      preferDigitRunWithoutSpaceRef.current = false;
       setFormData({
-        number: formatPhoneNumber(number.number),
+        number: formatAdminPhoneNumberInput(number.number, {
+          preferDigitRunWithoutSpace: false,
+        }),
         categoryId: categoryIds,
         price: isPriceOnCall
           ? "Price On Call"
@@ -165,27 +181,74 @@ const NumberModal = ({
     });
   };
 
-  const formatPhoneNumber = (value: string): string => {
-    // Allow digits, spaces, and hyphens while typing.
-    const cleaned = value.replace(/[^\d\s-]/g, "");
-
-    // If user manually uses separators, preserve that input style.
-    if (cleaned.includes(" ") || cleaned.includes("-")) {
-      return cleaned
-        .replace(/\s{2,}/g, " ")
-        .replace(/-{2,}/g, "-")
-        .replace(/^[-\s]+/, "");
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    if (/[a-zA-Z]/.test(raw)) {
+      preferDigitRunWithoutSpaceRef.current = false;
     }
 
-    // Default helper formatting: auto-add a single space after first 4 digits.
-    const digitsOnly = cleaned.replace(/\D/g, "");
-    if (digitsOnly.length <= 4) return digitsOnly;
-    return `${digitsOnly.slice(0, 4)} ${digitsOnly.slice(4)}`;
+    const wasPrefer = preferDigitRunWithoutSpaceRef.current;
+    const formatted = formatAdminPhoneNumberInput(raw, {
+      preferDigitRunWithoutSpace: wasPrefer,
+    });
+
+    const digitsOnly = formatted.replace(/\D/g, "");
+    if (digitsOnly.length <= 4 && !/[a-zA-Z]/.test(formatted)) {
+      preferDigitRunWithoutSpaceRef.current = false;
+    }
+
+    if (wasPrefer && /[\s-]/.test(formatted)) {
+      preferDigitRunWithoutSpaceRef.current = false;
+    }
+
+    setFormData({ ...formData, number: formatted });
   };
 
-  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    setFormData({ ...formData, number: formatted });
+  const handleNumberKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Backspace" && e.key !== "Delete") return;
+
+    const input = e.currentTarget;
+    const start = input.selectionStart ?? 0;
+    const end = input.selectionEnd ?? 0;
+    const val = formData.number;
+
+    if (start !== end) return;
+
+    if (e.key === "Backspace" && start > 0) {
+      const charBefore = val[start - 1];
+      if (
+        charBefore === " " &&
+        shouldMergeAutoSpaceOnBackspace(val) &&
+        !/[a-zA-Z]/.test(val)
+      ) {
+        e.preventDefault();
+        preferDigitRunWithoutSpaceRef.current = true;
+        const merged = val.slice(0, start - 1) + val.slice(start);
+        const next = formatAdminPhoneNumberInput(merged, {
+          preferDigitRunWithoutSpace: true,
+        });
+        setFormData({ ...formData, number: next });
+        requestAnimationFrame(() => {
+          input.setSelectionRange(start - 1, start - 1);
+        });
+      }
+      return;
+    }
+
+    if (e.key === "Delete" && start < val.length) {
+      if (shouldMergeAutoSpaceOnDelete(val, start) && !/[a-zA-Z]/.test(val)) {
+        e.preventDefault();
+        preferDigitRunWithoutSpaceRef.current = true;
+        const merged = val.slice(0, start) + val.slice(start + 1);
+        const next = formatAdminPhoneNumberInput(merged, {
+          preferDigitRunWithoutSpace: true,
+        });
+        setFormData({ ...formData, number: next });
+        requestAnimationFrame(() => {
+          input.setSelectionRange(start, start);
+        });
+      }
+    }
   };
 
   return (
@@ -217,9 +280,10 @@ const NumberModal = ({
                 type="text"
                 value={formData.number}
                 onChange={handleNumberChange}
+                onKeyDown={handleNumberKeyDown}
                 required
                 className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#FFD700]"
-                placeholder="0300 1234567"
+                placeholder="0300 1234567 or VIP-786-A"
               />
             </div>
             <div>

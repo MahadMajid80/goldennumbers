@@ -41,6 +41,18 @@ const FeaturedYellowCardCategories = ({
   );
 };
 
+/** Gold pill for price / Price On Call — same shape as Buy Now, gold fill for contrast on the card. */
+const featuredPricePillBase =
+  "inline-flex items-center justify-center rounded-full border border-black/25 bg-gradient-to-b from-[#FFEB99] via-[#FFD700] to-[#E6AC00] font-bold text-black shadow-md ring-1 ring-black/10";
+
+const featuredPricePillMobile = `${featuredPricePillBase} px-3 py-1.5 text-base`;
+
+const featuredPricePillMobilePoc = `${featuredPricePillBase} gap-1.5 px-3 py-1.5 text-xs`;
+
+const featuredPricePillDesktop = `${featuredPricePillBase} px-4 py-2 text-lg`;
+
+const featuredPricePillDesktopPoc = `${featuredPricePillBase} gap-2 px-4 py-2 text-sm`;
+
 const getNetworkLogo = (network: string) => {
   const logos: Record<string, string> = {
     Jazz: "/jazz-logo.png",
@@ -294,15 +306,13 @@ const FeaturedNumbersCards = () => {
                     </span>
                   )}
                   {item.price !== "Price On Call" && (
-                    <span className="text-base font-semibold text-black">
-                      {item.price}
-                    </span>
+                    <span className={featuredPricePillMobile}>{item.price}</span>
                   )}
                   {item.price === "Price On Call" && (
                     <button
                       type="button"
                       onClick={() => openDialer()}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-xs font-semibold text-white transition-colors duration-300 hover:bg-gray-800"
+                      className={`${featuredPricePillMobilePoc} transition-[filter] duration-300 hover:brightness-105`}
                     >
                       <svg
                         className="h-3.5 w-3.5 shrink-0"
@@ -374,15 +384,13 @@ const FeaturedNumbersCards = () => {
                   </span>
                 )}
                 {item.price !== "Price On Call" && (
-                  <span className="text-lg font-semibold text-black">
-                    {item.price}
-                  </span>
+                  <span className={featuredPricePillDesktop}>{item.price}</span>
                 )}
                 {item.price === "Price On Call" && (
                   <button
                     type="button"
                     onClick={() => openDialer()}
-                    className="inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 hover:bg-gray-800"
+                    className={`${featuredPricePillDesktopPoc} transition-[filter] duration-300 hover:brightness-105`}
                   >
                     <svg
                       className="h-4 w-4 shrink-0"
@@ -443,15 +451,13 @@ const FeaturedNumbersCards = () => {
                   </span>
                 )}
                 {item.price !== "Price On Call" && (
-                  <span className="text-lg font-semibold text-black">
-                    {item.price}
-                  </span>
+                  <span className={featuredPricePillDesktop}>{item.price}</span>
                 )}
                 {item.price === "Price On Call" && (
                   <button
                     type="button"
                     onClick={() => openDialer()}
-                    className="inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 hover:bg-gray-800"
+                    className={`${featuredPricePillDesktopPoc} transition-[filter] duration-300 hover:brightness-105`}
                   >
                     <svg
                       className="h-4 w-4 shrink-0"

@@ -47,7 +47,7 @@ const getNetworkLogo = (network: string) => {
   };
   return logos[network] || "/jazz-logo.png";
 };
-
+ 
 type PremiumNumberCardProps = {
   num: PremiumNumber;
   index: number;
