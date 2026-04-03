@@ -5,6 +5,7 @@ import Image from "next/image";
 import CallPreviewModal from "./CallPreviewModal";
 import DeviceSelector, { DeviceType } from "./DeviceSelector";
 import { openWhatsApp, openDialer } from "./utils";
+import { playHorizontalScrollHint } from "../../helpers/playHorizontalScrollHint";
 
 type Category = {
   _id: string;
@@ -55,6 +56,11 @@ const FeaturedNumbersList = ({
     useState<DeviceType>("iphone-14-pro-max");
   const categorySliderRef = useRef<HTMLDivElement>(null);
   const hasAutoSlidCategoryRef = useRef(false);
+  const featuredNumbersBlockRef = useRef<HTMLDivElement>(null);
+  const hasPlayedFeaturedTagsHintRef = useRef(false);
+  const featuredTagHintHandlesRef = useRef<Array<{ cancel: () => void }>>(
+    [],
+  );
 
   useEffect(() => {
     fetchNumbers();
@@ -213,6 +219,62 @@ const FeaturedNumbersList = ({
     });
   }
 
+  useEffect(() => {
+    if (loading || filteredNumbers.length === 0) return;
+
+    const blockEl = featuredNumbersBlockRef.current;
+    if (!blockEl) return;
+
+    let teardown = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.isIntersecting || hasPlayedFeaturedTagsHintRef.current) {
+          return;
+        }
+
+        const playHints = (): void => {
+          if (teardown) return;
+          hasPlayedFeaturedTagsHintRef.current = true;
+          featuredTagHintHandlesRef.current.forEach((h) => h.cancel());
+          featuredTagHintHandlesRef.current = [];
+
+          const nodes = blockEl.querySelectorAll<HTMLElement>(
+            "[data-featured-card-tags-scroll]",
+          );
+
+          nodes.forEach((node, index) => {
+            const maxScroll = node.scrollWidth - node.clientWidth;
+            if (maxScroll <= 0) return;
+
+            const handle = playHorizontalScrollHint(node, {
+              delayMs: 400 + index * 45,
+              durationMs: 2400,
+            });
+            featuredTagHintHandlesRef.current.push(handle);
+          });
+        };
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(playHints);
+        });
+
+        observer.disconnect();
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" },
+    );
+
+    observer.observe(blockEl);
+
+    return () => {
+      teardown = true;
+      observer.disconnect();
+      featuredTagHintHandlesRef.current.forEach((h) => h.cancel());
+      featuredTagHintHandlesRef.current = [];
+    };
+  }, [loading, filteredNumbers.length]);
+
   return (
     <div>
       <div className="container mx-auto px-4 pt-2 pb-6">
@@ -363,7 +425,7 @@ const FeaturedNumbersList = ({
             <div className="text-white text-lg">No numbers found</div>
           </div>
         ) : (
-          <div>
+          <div ref={featuredNumbersBlockRef}>
             {filteredNumbers.length > 8 ? (
               <div
                 className="max-h-[368px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
@@ -402,7 +464,10 @@ const FeaturedNumbersList = ({
                           </div>
                           <div className="mt-2 flex items-center justify-between gap-2">
                             {item.categoryId && item.categoryId.length > 0 ? (
-                              <div className="flex flex-1 items-center gap-1 overflow-x-auto scrollbar-hide max-w-full">
+                              <div
+                                data-featured-card-tags-scroll
+                                className="scrollbar-hide flex min-w-0 max-w-full flex-1 items-center gap-1 overflow-x-auto [-webkit-overflow-scrolling:touch]"
+                              >
                                 {item.categoryId.map((cat) => (
                                   <span
                                     key={cat._id}
@@ -592,7 +657,10 @@ const FeaturedNumbersList = ({
                         </div>
                         <div className="mt-2 flex items-center justify-between gap-2">
                           {item.categoryId && item.categoryId.length > 0 ? (
-                            <div className="flex flex-1 items-center gap-1 overflow-x-auto scrollbar-hide max-w-full">
+                            <div
+                              data-featured-card-tags-scroll
+                              className="scrollbar-hide flex min-w-0 max-w-full flex-1 items-center gap-1 overflow-x-auto [-webkit-overflow-scrolling:touch]"
+                            >
                               {item.categoryId.map((cat) => (
                                 <span
                                   key={cat._id}
