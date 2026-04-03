@@ -12,6 +12,30 @@ type PremiumNumber = {
   categoryId: Array<{ _id: string; name: string }>;
 };
 
+/** Shown on localhost when the API returns no premium numbers (design preview only). */
+const MOCK_PREMIUM_FOR_LOCAL_PREVIEW: PremiumNumber[] = [
+  {
+    _id: "local-preview-mock-1",
+    network: "Jazz",
+    number: "0303 0000 888",
+    price: "Price On Call",
+    categoryId: [
+      { _id: "mock-cat-1", name: "Tetra-Triple" },
+      { _id: "mock-cat-2", name: "Tetra" },
+      { _id: "mock-cat-3", name: "Repeating" },
+    ],
+  },
+  {
+    _id: "local-preview-mock-2",
+    network: "Zong",
+    number: "0321 765 4321",
+    price: "Rs 1,500,000",
+    categoryId: [{ _id: "mock-cat-4", name: "Platinum Numbers" }],
+  },
+];
+
+const isDevelopment = process.env.NODE_ENV === "development";
+
 const getNetworkLogo = (network: string) => {
   const logos: Record<string, string> = {
     Jazz: "/jazz-logo.png",
@@ -22,6 +46,94 @@ const getNetworkLogo = (network: string) => {
   };
   return logos[network] || "/jazz-logo.png";
 };
+
+type PremiumNumberCardProps = {
+  num: PremiumNumber;
+  index: number;
+};
+
+const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
+  <div
+    className="group relative overflow-hidden rounded-2xl border border-gray-700/60 bg-gradient-to-br from-[#0f1419] via-[#151b24] to-[#0c1016] shadow-lg transition-all duration-300 hover:border-[#FFD700]/35 hover:shadow-[0_12px_40px_-12px_rgba(255,215,0,0.18)]"
+    style={{ animationDelay: `${index * 80}ms` }}
+  >
+    <div
+      className="pointer-events-none absolute right-0 top-0 h-full w-px bg-gradient-to-b from-[#FFD700] via-[#d4af37] to-[#8a7020] opacity-90"
+      aria-hidden
+    />
+    <div className="scrollbar-hide flex items-center gap-3 overflow-x-auto p-4 sm:gap-4 sm:p-5 sm:pr-6">
+      <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-gray-700/50 bg-black/35 sm:h-14 sm:w-14">
+        <Image
+          src={getNetworkLogo(num.network)}
+          alt={num.network}
+          width={72}
+          height={36}
+          className="h-7 w-auto max-w-[2.75rem] object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 sm:max-w-[3.25rem]"
+        />
+        {num.network === "Ufone" && (
+          <span className="mt-0.5 max-w-[3rem] truncate text-[8px] uppercase leading-none text-gray-500">
+            all about u
+          </span>
+        )}
+      </div>
+
+      <p className="shrink-0 text-lg font-bold tracking-tight text-[#e6c84a] sm:text-xl md:text-2xl">
+        {num.number}
+      </p>
+
+      {num.categoryId && num.categoryId.length > 0 && (
+        <div className="flex shrink-0 flex-nowrap items-center gap-1.5">
+          {num.categoryId.map((cat) => (
+            <span
+              key={cat._id}
+              className="inline-flex shrink-0 rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:text-[11px]"
+            >
+              {cat.name}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+        {num.price === "Price On Call" ? (
+          <button
+            type="button"
+            onClick={() => openDialer()}
+            className="inline-flex items-center gap-1.5 rounded-full border border-zinc-600 bg-zinc-950 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:border-[#FFD700]/40 hover:bg-zinc-900 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
+          >
+            <svg
+              className="h-3.5 w-3.5 shrink-0 opacity-90 sm:h-4 sm:w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              />
+            </svg>
+            Price On Call
+          </button>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={openWhatsApp}
+              className="rounded-full bg-[#c9a227] px-3 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-[#d4af37] sm:px-4 sm:py-2 sm:text-sm"
+            >
+              Buy Now
+            </button>
+            <span className="text-sm font-medium text-gray-400 sm:text-base">
+              {num.price}
+            </span>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+);
 
 const PremiumNumbersTable = () => {
   const [premiumNumbers, setPremiumNumbers] = useState<PremiumNumber[]>([]);
@@ -57,6 +169,18 @@ const PremiumNumbersTable = () => {
     }
   };
 
+  const displayNumbers =
+    premiumNumbers.length > 0
+      ? premiumNumbers
+      : isDevelopment
+        ? MOCK_PREMIUM_FOR_LOCAL_PREVIEW
+        : [];
+
+  const showingLocalPreview =
+    isDevelopment &&
+    premiumNumbers.length === 0 &&
+    displayNumbers.length > 0;
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -84,13 +208,20 @@ const PremiumNumbersTable = () => {
         </div>
       </div>
 
-      {premiumNumbers.length === 0 ? (
+      {showingLocalPreview && (
+        <p className="mb-4 text-center text-xs text-gray-500">
+          Local preview — mock tiles; real data appears when premium numbers exist in the
+          database.
+        </p>
+      )}
+
+      {displayNumbers.length === 0 ? (
         <div className="text-white text-center py-12">
           No premium numbers available
         </div>
       ) : (
         <div>
-          {premiumNumbers.length > 8 ? (
+          {displayNumbers.length > 8 ? (
             <div
               className="max-h-[500px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
               style={{
@@ -98,170 +229,16 @@ const PremiumNumbersTable = () => {
                 scrollbarColor: "#4B5563 #1F2937",
               }}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {premiumNumbers.map((num, index) => (
-                  <div
-                    key={num._id}
-                    className="bg-gray-800 rounded-lg p-6 border-2 border-[#FFD700] shadow-lg hover:shadow-2xl hover:scale-[1.02] active:shadow-2xl active:scale-[1.02] transition-all duration-300 cursor-pointer group animate-fade-in"
-                    style={{
-                      animationDelay: `${index * 100}ms`,
-                    }}
-                  >
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                      <div className="flex items-center gap-6 flex-1 w-full md:w-auto">
-                        <div className="flex-shrink-0">
-                          <Image
-                            src={getNetworkLogo(num.network)}
-                            alt={num.network}
-                            width={80}
-                            height={40}
-                            className="object-contain h-12 group-hover:scale-110 group-active:scale-110 transition-transform duration-300"
-                          />
-                          {num.network === "Ufone" && (
-                            <p className="text-xs text-gray-400 mt-1 text-center">
-                              it&apos;s all about u
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-2xl font-bold text-[#FFD700] group-hover:text-[#FFA500] group-active:text-[#FFA500] transition-colors duration-300">
-                            {num.number}
-                          </p>
-                          {num.categoryId && num.categoryId.length > 0 && (
-                            <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide w-full min-w-0">
-                              {num.categoryId.map((cat) => (
-                                <span
-                                  key={cat._id}
-                                  className="bg-[#FFD700] text-black px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0"
-                                >
-                                  {cat.name}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex-shrink-0 flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
-                        {num.price === "Price On Call" ? (
-                          <button 
-                            onClick={() => openDialer()}
-                            className="bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 active:bg-gray-800 transition-all duration-300 flex items-center gap-2 group-hover:scale-105 active:scale-105 shadow-lg"
-                          >
-                            <svg
-                              className="w-5 h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                              />
-                            </svg>
-                            <span>Price On Call</span>
-                          </button>
-                        ) : (
-                          <>
-                            <button 
-                              onClick={openWhatsApp}
-                              className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#FFA500] active:bg-[#FFA500] transition-all duration-300 group-hover:scale-105 active:scale-105 shadow-lg"
-                            >
-                              Buy Now
-                            </button>
-                            <span className="text-lg font-semibold text-gray-300">
-                              {num.price}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+                {displayNumbers.map((num, index) => (
+                  <PremiumNumberCard key={num._id} num={num} index={index} />
                 ))}
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {premiumNumbers.map((num, index) => (
-                <div
-                  key={num._id}
-                  className="bg-gray-800 rounded-lg p-6 border-2 border-[#FFD700] shadow-lg hover:shadow-2xl hover:scale-[1.02] active:shadow-2xl active:scale-[1.02] transition-all duration-300 cursor-pointer group animate-fade-in overflow-hidden"
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                  }}
-                >
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-center gap-6 flex-1 w-full md:w-auto">
-                <div className="flex-shrink-0">
-                  <Image
-                    src={getNetworkLogo(num.network)}
-                    alt={num.network}
-                    width={80}
-                    height={40}
-                    className="object-contain h-12 group-hover:scale-110 transition-transform duration-300"
-                  />
-                  {num.network === "Ufone" && (
-                    <p className="text-xs text-gray-400 mt-1 text-center">
-                      it&apos;s all about u
-                    </p>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-2xl font-bold text-[#FFD700] group-hover:text-[#FFA500] transition-colors duration-300">
-                    {num.number}
-                  </p>
-                      {num.categoryId && num.categoryId.length > 0 && (
-                        <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide w-full min-w-0">
-                          {num.categoryId.map((cat) => (
-                            <span
-                              key={cat._id}
-                              className="bg-[#FFD700] text-black px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0"
-                            >
-                              {cat.name}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                </div>
-              </div>
-              <div className="flex-shrink-0 flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
-                {num.price === "Price On Call" ? (
-                  <button 
-                    onClick={() => openDialer()}
-                    className="bg-black text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 flex items-center gap-2 group-hover:scale-105 shadow-lg"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                    <span>Price On Call</span>
-                  </button>
-                ) : (
-                  <>
-                    <button 
-                      onClick={openWhatsApp}
-                      className="bg-[#FFD700] text-black px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#FFA500] transition-all duration-300 group-hover:scale-105 shadow-lg"
-                    >
-                      Buy Now
-                    </button>
-                    <span className="text-lg font-semibold text-gray-300">
-                      {num.price}
-                    </span>
-                  </>
-                )}
-              </div>
-                  </div>
-                </div>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+              {displayNumbers.map((num, index) => (
+                <PremiumNumberCard key={num._id} num={num} index={index} />
               ))}
             </div>
           )}
