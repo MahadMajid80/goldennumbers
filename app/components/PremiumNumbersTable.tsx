@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import { openWhatsApp, openDialer } from "./utils";
 
@@ -135,13 +135,25 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
   </div>
 );
 
+const easeInOutQuad = (t: number): number =>
+  t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
 const PremiumNumbersTable = () => {
   const [premiumNumbers, setPremiumNumbers] = useState<PremiumNumber[]>([]);
   const [loading, setLoading] = useState(true);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const scrollRowRef = useRef<HTMLDivElement>(null);
+  const hasPlayedScrollHintRef = useRef(false);
 
-  useEffect(() => {
-    fetchPremiumNumbers();
-  }, []);
+  const displayNumbers = useMemo(
+    () =>
+      premiumNumbers.length > 0
+        ? premiumNumbers
+        : isDevelopment
+          ? MOCK_PREMIUM_FOR_LOCAL_PREVIEW
+          : [],
+    [premiumNumbers],
+  );
 
   const fetchPremiumNumbers = async () => {
     try {
@@ -169,12 +181,86 @@ const PremiumNumbersTable = () => {
     }
   };
 
-  const displayNumbers =
-    premiumNumbers.length > 0
-      ? premiumNumbers
-      : isDevelopment
-        ? MOCK_PREMIUM_FOR_LOCAL_PREVIEW
-        : [];
+  useEffect(() => {
+    fetchPremiumNumbers();
+  }, []);
+
+  useEffect(() => {
+    if (loading || displayNumbers.length === 0) return;
+
+    const sectionEl = sectionRef.current;
+    const rowEl = scrollRowRef.current;
+    if (!sectionEl || !rowEl) return;
+
+    let aborted = false;
+    let timeoutId: number | undefined;
+    let rafId: number | undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.isIntersecting || hasPlayedScrollHintRef.current) return;
+
+        const playHint = () => {
+          if (aborted) return;
+          const maxScrollLeft = rowEl.scrollWidth - rowEl.clientWidth;
+          if (maxScrollLeft <= 0) {
+            hasPlayedScrollHintRef.current = true;
+            return;
+          }
+
+          hasPlayedScrollHintRef.current = true;
+          const start = rowEl.scrollLeft;
+          const durationMs = 2800;
+
+          const animateScroll = (
+            from: number,
+            to: number,
+            onDone: () => void,
+          ) => {
+            const animStart = performance.now();
+            const delta = to - from;
+            const step = (now: number) => {
+              if (aborted) return;
+              const elapsed = now - animStart;
+              const progress = Math.min(elapsed / durationMs, 1);
+              rowEl.scrollLeft = from + delta * easeInOutQuad(progress);
+              if (progress < 1) {
+                rafId = window.requestAnimationFrame(step);
+              } else {
+                onDone();
+              }
+            };
+            rafId = window.requestAnimationFrame(step);
+          };
+
+          timeoutId = window.setTimeout(() => {
+            if (aborted) return;
+            animateScroll(start, maxScrollLeft, () => {
+              if (aborted) return;
+              animateScroll(maxScrollLeft, start, () => {});
+            });
+          }, 400);
+        };
+
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(playHint);
+        });
+
+        observer.disconnect();
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    observer.observe(sectionEl);
+
+    return () => {
+      aborted = true;
+      observer.disconnect();
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+      if (rafId !== undefined) window.cancelAnimationFrame(rafId);
+    };
+  }, [loading, displayNumbers.length]);
 
   const showingLocalPreview =
     isDevelopment &&
@@ -198,7 +284,7 @@ const PremiumNumbersTable = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div ref={sectionRef} className="container mx-auto px-4 py-8">
       <div className="mb-8 text-center">
         <div className="inline-block">
           <h2 className="text-2xl font-bold text-white mb-2">
@@ -220,28 +306,18 @@ const PremiumNumbersTable = () => {
           No premium numbers available
         </div>
       ) : (
-        <div>
-          {displayNumbers.length > 8 ? (
+        <div
+          ref={scrollRowRef}
+          className="scrollbar-hide flex gap-5 overflow-x-auto pb-2 pt-1 [-webkit-overflow-scrolling:touch]"
+        >
+          {displayNumbers.map((num, index) => (
             <div
-              className="max-h-[500px] md:max-h-[450px] overflow-y-auto overflow-x-hidden pr-2"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#4B5563 #1F2937",
-              }}
+              key={num._id}
+              className="w-[min(92vw,28rem)] shrink-0 sm:w-[26rem] md:w-[28rem]"
             >
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-                {displayNumbers.map((num, index) => (
-                  <PremiumNumberCard key={num._id} num={num} index={index} />
-                ))}
-              </div>
+              <PremiumNumberCard num={num} index={index} />
             </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-              {displayNumbers.map((num, index) => (
-                <PremiumNumberCard key={num._id} num={num} index={index} />
-              ))}
-            </div>
-          )}
+          ))}
         </div>
       )}
     </div>
