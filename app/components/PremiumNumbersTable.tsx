@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { openWhatsApp, openDialer } from "./utils";
+import { playHorizontalScrollHint } from "../../helpers/playHorizontalScrollHint";
 
 type PremiumNumber = {
   _id: string;
@@ -61,7 +62,10 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
       className="pointer-events-none absolute right-0 top-0 h-full w-px bg-gradient-to-b from-[#FFD700] via-[#d4af37] to-[#8a7020] opacity-90"
       aria-hidden
     />
-    <div className="scrollbar-hide flex items-center gap-3 overflow-x-auto p-4 sm:gap-4 sm:p-5 sm:pr-6">
+    <div
+      data-premium-card-inner-scroll
+      className="scrollbar-hide flex min-w-0 items-center gap-3 overflow-x-auto p-4 [-webkit-overflow-scrolling:touch] sm:gap-4 sm:p-5 sm:pr-6"
+    >
       <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-gray-700/50 bg-black/35 sm:h-14 sm:w-14">
         <Image
           src={getNetworkLogo(num.network)}
@@ -138,6 +142,11 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
 const PremiumNumbersTable = () => {
   const [premiumNumbers, setPremiumNumbers] = useState<PremiumNumber[]>([]);
   const [loading, setLoading] = useState(true);
+  const premiumNumbersBlockRef = useRef<HTMLDivElement>(null);
+  const hasPlayedPremiumInnerHintRef = useRef(false);
+  const premiumInnerHintHandlesRef = useRef<Array<{ cancel: () => void }>>(
+    [],
+  );
 
   const displayNumbers = useMemo(
     () =>
@@ -178,6 +187,62 @@ const PremiumNumbersTable = () => {
   useEffect(() => {
     fetchPremiumNumbers();
   }, []);
+
+  useEffect(() => {
+    if (loading || displayNumbers.length === 0) return;
+
+    const blockEl = premiumNumbersBlockRef.current;
+    if (!blockEl) return;
+
+    let teardown = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.isIntersecting || hasPlayedPremiumInnerHintRef.current) {
+          return;
+        }
+
+        const playHints = (): void => {
+          if (teardown) return;
+          hasPlayedPremiumInnerHintRef.current = true;
+          premiumInnerHintHandlesRef.current.forEach((h) => h.cancel());
+          premiumInnerHintHandlesRef.current = [];
+
+          const nodes = blockEl.querySelectorAll<HTMLElement>(
+            "[data-premium-card-inner-scroll]",
+          );
+
+          nodes.forEach((node, index) => {
+            const maxScroll = node.scrollWidth - node.clientWidth;
+            if (maxScroll <= 0) return;
+
+            const handle = playHorizontalScrollHint(node, {
+              delayMs: 400 + index * 45,
+              durationMs: 2400,
+            });
+            premiumInnerHintHandlesRef.current.push(handle);
+          });
+        };
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(playHints);
+        });
+
+        observer.disconnect();
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" },
+    );
+
+    observer.observe(blockEl);
+
+    return () => {
+      teardown = true;
+      observer.disconnect();
+      premiumInnerHintHandlesRef.current.forEach((h) => h.cancel());
+      premiumInnerHintHandlesRef.current = [];
+    };
+  }, [loading, displayNumbers.length]);
 
   const showingLocalPreview =
     isDevelopment &&
@@ -223,7 +288,7 @@ const PremiumNumbersTable = () => {
           No premium numbers available
         </div>
       ) : (
-        <div>
+        <div ref={premiumNumbersBlockRef}>
           {displayNumbers.length > 8 ? (
             <div
               className="max-h-[500px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-[450px]"
