@@ -249,69 +249,78 @@ const PremiumNumbersTable = () => {
     premiumNumbers.length === 0 &&
     displayNumbers.length > 0;
 
+  const premiumSectionFrameClass =
+    "rounded-xl border border-[#FFD700]/45 bg-zinc-950/25 p-4 shadow-[inset_0_1px_0_0_rgba(255,215,0,0.06)] md:p-6";
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8 text-center">
-          <div className="inline-block">
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Premium Numbers Available
-            </h2>
-            <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+        <div className={premiumSectionFrameClass}>
+          <div className="mb-8 text-center">
+            <div className="inline-block">
+              <h2 className="mb-2 text-2xl font-bold text-white">
+                Premium Numbers Available
+              </h2>
+              <div className="h-1 rounded bg-gradient-to-r from-[#FFD700] to-[#FFA500]"></div>
+            </div>
+          </div>
+          <div className="text-center text-white">
+            Loading premium numbers...
           </div>
         </div>
-        <div className="text-white text-center">Loading premium numbers...</div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 text-center">
-        <div className="inline-block">
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Premium Numbers Available
-          </h2>
-          <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+      <div className={premiumSectionFrameClass}>
+        <div className="mb-8 text-center">
+          <div className="inline-block">
+            <h2 className="mb-2 text-2xl font-bold text-white">
+              Premium Numbers Available
+            </h2>
+            <div className="h-1 rounded bg-gradient-to-r from-[#FFD700] to-[#FFA500]"></div>
+          </div>
         </div>
-      </div>
 
-      {showingLocalPreview && (
-        <p className="mb-4 text-center text-xs text-gray-500">
-          Local preview — mock tiles; real data appears when premium numbers exist in the
-          database.
-        </p>
-      )}
+        {showingLocalPreview && (
+          <p className="mb-4 text-center text-xs text-gray-500">
+            Local preview — mock tiles; real data appears when premium numbers exist in
+            the database.
+          </p>
+        )}
 
-      {displayNumbers.length === 0 ? (
-        <div className="text-white text-center py-12">
-          No premium numbers available
-        </div>
-      ) : (
-        <div ref={premiumNumbersBlockRef}>
-          {displayNumbers.length > 8 ? (
-            <div
-              className="max-h-[500px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-[450px]"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#4B5563 #1F2937",
-              }}
-            >
+        {displayNumbers.length === 0 ? (
+          <div className="py-12 text-center text-white">
+            No premium numbers available
+          </div>
+        ) : (
+          <div ref={premiumNumbersBlockRef}>
+            {displayNumbers.length > 8 ? (
+              <div
+                className="max-h-[500px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-[450px]"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#4B5563 #1F2937",
+                }}
+              >
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+                  {displayNumbers.map((num, index) => (
+                    <PremiumNumberCard key={num._id} num={num} index={index} />
+                  ))}
+                </div>
+              </div>
+            ) : (
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
                 {displayNumbers.map((num, index) => (
                   <PremiumNumberCard key={num._id} num={num} index={index} />
                 ))}
               </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-              {displayNumbers.map((num, index) => (
-                <PremiumNumberCard key={num._id} num={num} index={index} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

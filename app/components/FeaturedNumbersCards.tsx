@@ -10,6 +10,35 @@ type NumberCard = {
   price: string;
   network: "Jazz" | "Ufone" | "Telenor" | "Warid" | "Zong";
   limitedOffer?: boolean;
+  categoryId?: Array<{ _id: string; name: string }>;
+};
+
+type FeaturedYellowCategoriesProps = {
+  categories: Array<{ _id: string; name: string }>;
+  variant: "mobile" | "desktop";
+};
+
+const FeaturedYellowCardCategories = ({
+  categories,
+  variant,
+}: FeaturedYellowCategoriesProps) => {
+  if (!categories.length) return null;
+  const chipClass =
+    variant === "mobile"
+      ? "rounded-full border border-black/40 bg-black/[0.12] px-2 py-0.5 text-[11px] font-semibold leading-tight text-black"
+      : "rounded-full border border-black/40 bg-black/[0.12] px-2.5 py-0.5 text-xs font-semibold leading-tight text-black";
+  return (
+    <div
+      className="flex max-w-full flex-wrap justify-center gap-1.5 px-1"
+      aria-label="Categories"
+    >
+      {categories.map((cat) => (
+        <span key={cat._id} className={chipClass}>
+          {cat.name}
+        </span>
+      ))}
+    </div>
+  );
 };
 
 const getNetworkLogo = (network: string) => {
@@ -184,16 +213,25 @@ const FeaturedNumbersCards = () => {
     }
   };
 
+  const sectionFrameClass =
+    "rounded-xl border border-[#FFD700]/45 bg-zinc-950/25 p-4 shadow-[inset_0_1px_0_0_rgba(255,215,0,0.06)] md:p-6";
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6 text-center">
-          <div className="inline-block">
-            <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
-            <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+        <div className={sectionFrameClass}>
+          <div className="mb-6 text-center">
+            <div className="inline-block">
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Featured Numbers
+              </h2>
+              <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+            </div>
+          </div>
+          <div className="text-center text-white">
+            Loading featured numbers...
           </div>
         </div>
-        <div className="text-white text-center">Loading featured numbers...</div>
       </div>
     );
   }
@@ -201,19 +239,26 @@ const FeaturedNumbersCards = () => {
   if (featuredNumbers.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6 text-center">
-          <div className="inline-block">
-            <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
-            <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+        <div className={sectionFrameClass}>
+          <div className="mb-6 text-center">
+            <div className="inline-block">
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Featured Numbers
+              </h2>
+              <div className="h-1 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded"></div>
+            </div>
+          </div>
+          <div className="text-center text-white">
+            No featured numbers available
           </div>
         </div>
-        <div className="text-white text-center">No featured numbers available</div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className={sectionFrameClass}>
       <div className="mb-6 text-center">
         <div className="inline-block">
           <h2 className="text-2xl font-bold text-white mb-2">Featured Numbers</h2>
@@ -224,7 +269,7 @@ const FeaturedNumbersCards = () => {
       <div className="md:hidden">
         <div
           ref={mobileCarouselRef}
-          className="h-[220px] overflow-y-auto scrollbar-hide snap-y snap-mandatory space-y-3 pb-2 [-webkit-overflow-scrolling:touch]"
+          className="h-[248px] overflow-y-auto scrollbar-hide snap-y snap-mandatory space-y-3 pb-2 [-webkit-overflow-scrolling:touch]"
           onPointerEnter={() => setIsPaused(true)}
           onPointerLeave={() => setIsPaused(false)}
         >
@@ -232,7 +277,7 @@ const FeaturedNumbersCards = () => {
             <div
               key={item._id}
               data-featured-carousel-card
-              className="snap-center flex min-h-[180px] flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFD100] px-4 py-3 shadow-lg"
+              className="snap-center flex min-h-[200px] flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFD100] px-4 py-3 shadow-lg"
             >
               <div className="mb-3 flex items-start justify-between gap-2">
                 <Image
@@ -277,10 +322,14 @@ const FeaturedNumbersCards = () => {
                   )}
                 </div>
               </div>
-              <div className="mb-3 flex flex-1 items-center justify-center">
+              <div className="mb-2 flex flex-1 flex-col items-center justify-center gap-2">
                 <p className="text-center text-2xl font-bold text-black">
                   {item.number}
                 </p>
+                <FeaturedYellowCardCategories
+                  categories={item.categoryId ?? []}
+                  variant="mobile"
+                />
               </div>
               <div className="mt-auto flex justify-start">
                 <button
@@ -307,7 +356,7 @@ const FeaturedNumbersCards = () => {
           {featuredNumbers.map((item, index) => (
             <div
               key={`original-${item._id}-${index}`}
-              className="group relative flex h-[170px] w-[280px] flex-shrink-0 cursor-pointer flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[190px] sm:w-[320px] sm:p-6 md:w-[370px]"
+              className="group relative flex h-[200px] w-[280px] flex-shrink-0 cursor-pointer flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[218px] sm:w-[320px] sm:p-6 md:h-[224px] md:w-[370px]"
             >
               <div className="absolute left-4 top-4 z-10">
                 <Image
@@ -352,10 +401,14 @@ const FeaturedNumbersCards = () => {
                   </button>
                 )}
               </div>
-              <div className="mt-8 flex flex-1 items-center justify-center px-2">
+              <div className="mt-8 flex min-h-0 flex-1 flex-col items-center justify-center gap-1.5 px-2">
                 <p className="text-center text-3xl font-bold text-black">
                   {item.number}
                 </p>
+                <FeaturedYellowCardCategories
+                  categories={item.categoryId ?? []}
+                  variant="desktop"
+                />
               </div>
               <div className="relative z-10 mt-auto flex justify-start pt-2">
                 <button
@@ -372,7 +425,7 @@ const FeaturedNumbersCards = () => {
           {featuredNumbers.map((item, index) => (
             <div
               key={`duplicate-${item._id}-${index}`}
-              className="group relative flex h-[170px] w-[280px] flex-shrink-0 cursor-pointer flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[190px] sm:w-[320px] sm:p-6 md:w-[370px]"
+              className="group relative flex h-[200px] w-[280px] flex-shrink-0 cursor-pointer flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[218px] sm:w-[320px] sm:p-6 md:h-[224px] md:w-[370px]"
             >
               <div className="absolute left-4 top-4 z-10">
                 <Image
@@ -417,10 +470,14 @@ const FeaturedNumbersCards = () => {
                   </button>
                 )}
               </div>
-              <div className="mt-8 flex flex-1 items-center justify-center px-2">
+              <div className="mt-8 flex min-h-0 flex-1 flex-col items-center justify-center gap-1.5 px-2">
                 <p className="text-center text-3xl font-bold text-black">
                   {item.number}
                 </p>
+                <FeaturedYellowCardCategories
+                  categories={item.categoryId ?? []}
+                  variant="desktop"
+                />
               </div>
               <div className="relative z-10 mt-auto flex justify-start pt-2">
                 <button
@@ -434,6 +491,7 @@ const FeaturedNumbersCards = () => {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </div>
   );

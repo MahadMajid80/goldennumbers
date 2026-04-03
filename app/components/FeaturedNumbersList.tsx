@@ -277,7 +277,8 @@ const FeaturedNumbersList = ({
 
   return (
     <div>
-      <div className="container mx-auto px-4 pt-2 pb-6">
+      <div className="container mx-auto px-4 py-6">
+        <div className="rounded-xl border border-[#FFD700]/45 bg-zinc-950/25 p-4 shadow-[inset_0_1px_0_0_rgba(255,215,0,0.06)] md:p-6">
         <div className="hidden md:flex flex-wrap items-center justify-center gap-4 mb-6 border-2 border-[#FFD700] rounded-lg p-4">
           <div className="transition-all duration-300">
             <Image
@@ -807,6 +808,7 @@ const FeaturedNumbersList = ({
             )}
           </div>
         )}
+        </div>
       </div>
       {previewNumber && (
         <CallPreviewModal
