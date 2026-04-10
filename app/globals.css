@@ -49,3 +49,34 @@ body {
   animation: fade-in 0.5s ease-out forwards;
   opacity: 0;
 }
+
+/* Info section headers (Delivery, Biometric, …) — soft pulse + gold accent */
+@keyframes section-accent-icon {
+  0%,
+  100% {
+    color: #ffffff;
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  40% {
+    color: #fde047;
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.45));
+  }
+  55% {
+    color: #fef9c3;
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.35));
+  }
+}
+
+.animate-section-accent-icon {
+  transform-origin: center;
+  animation: section-accent-icon 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-section-accent-icon {
+    animation: none;
+  }
+}
