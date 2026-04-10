@@ -83,15 +83,23 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
             {num.number}
           </p>
           {num.categoryId && num.categoryId.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {num.categoryId.map((cat) => (
-                <span
-                  key={cat._id}
-                  className="inline-flex max-w-full rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:text-[11px]"
-                >
-                  <span className="break-words text-left">{cat.name}</span>
-                </span>
-              ))}
+            <div className="min-w-0 w-full">
+              <div
+                role="list"
+                aria-label="Categories"
+                className="scrollbar-hide flex flex-nowrap gap-1.5 overflow-x-auto overflow-y-hidden pb-0.5 [-webkit-overflow-scrolling:touch]"
+              >
+                {num.categoryId.map((cat) => (
+                  <span
+                    key={cat._id}
+                    role="listitem"
+                    title={cat.name}
+                    className="inline-block max-w-[11rem] shrink-0 truncate rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-left align-middle text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:max-w-[13rem] sm:text-[11px]"
+                  >
+                    {cat.name}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
