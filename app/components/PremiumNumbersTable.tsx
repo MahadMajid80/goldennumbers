@@ -71,11 +71,6 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
             height={36}
             className="h-7 w-auto max-w-[2.75rem] object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 sm:max-w-[3.25rem]"
           />
-          {num.network === "Ufone" && (
-            <span className="mt-0.5 max-w-[3rem] truncate text-[8px] uppercase leading-none text-gray-500">
-              all about u
-            </span>
-          )}
         </div>
 
         <div className="min-w-0 flex-1 space-y-2">
