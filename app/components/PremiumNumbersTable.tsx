@@ -105,10 +105,10 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
           <button
             type="button"
             onClick={() => openDialer()}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-600 bg-zinc-950 px-3 py-2 text-xs font-semibold text-white transition-colors hover:border-[#FFD700]/40 hover:bg-zinc-900 sm:w-auto sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#c9a227] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] sm:w-auto sm:gap-2"
           >
             <svg
-              className="h-3.5 w-3.5 shrink-0 opacity-90 sm:h-4 sm:w-4"
+              className="h-4 w-4 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
