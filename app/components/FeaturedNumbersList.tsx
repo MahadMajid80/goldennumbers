@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import CallPreviewModal from "./CallPreviewModal";
 import DeviceSelector, { DeviceType } from "./DeviceSelector";
@@ -40,6 +40,52 @@ const getNetworkLogo = (network: string) => {
   return logos[network] || "/jazz-logo.png";
 };
 
+const isDevelopment = process.env.NODE_ENV === "development";
+
+const MOCK_FEATURED_LIST_NUMBERS_FOR_LOCAL_PREVIEW: NumberItem[] = [
+  {
+    _id: "mock-featured-list-1",
+    number: "0339-9993999",
+    price: "Rs 65,000",
+    network: "Jazz",
+    categoryId: [
+      { _id: "mock-fl-cat-1", name: "Double 786" },
+      { _id: "mock-fl-cat-2", name: "Easy to Remember" },
+    ],
+  },
+  {
+    _id: "mock-featured-list-2",
+    number: "0300-2780000",
+    price: "Rs 100,000",
+    network: "Jazz",
+    categoryId: [
+      { _id: "mock-fl-cat-3", name: "All Digit" },
+      { _id: "mock-fl-cat-4", name: "0300" },
+    ],
+  },
+  {
+    _id: "mock-featured-list-3",
+    number: "0321-7911111",
+    price: "Rs 125,000",
+    network: "Jazz",
+    categoryId: [
+      { _id: "mock-fl-cat-5", name: "Silver Numbers" },
+      { _id: "mock-fl-cat-6", name: "0321" },
+    ],
+  },
+  {
+    _id: "mock-featured-list-4",
+    number: "0303-0000888",
+    price: "Rs 50,000",
+    network: "Jazz",
+    categoryId: [
+      { _id: "mock-fl-cat-7", name: "Tetra-Tripple" },
+      { _id: "mock-fl-cat-8", name: "Tetra" },
+      { _id: "mock-fl-cat-9", name: "Golden Numbers" },
+    ],
+  },
+];
+
 const FeaturedNumbersList = ({
   searchTerm,
   selectedNetwork,
@@ -60,6 +106,15 @@ const FeaturedNumbersList = ({
   const hasPlayedFeaturedTagsHintRef = useRef(false);
   const featuredTagHintHandlesRef = useRef<Array<{ cancel: () => void }>>(
     [],
+  );
+  const displayNumbers = useMemo(
+    () =>
+      numbers.length > 0
+        ? numbers
+        : isDevelopment
+          ? MOCK_FEATURED_LIST_NUMBERS_FOR_LOCAL_PREVIEW
+          : [],
+    [numbers],
   );
 
   useEffect(() => {
@@ -187,7 +242,7 @@ const FeaturedNumbersList = ({
 
   const filters = ["All", ...categories.map((cat) => cat.name)];
 
-  let filteredNumbers = numbers;
+  let filteredNumbers = displayNumbers;
 
   if (searchTerm.trim()) {
     filteredNumbers = filteredNumbers.filter((num) =>
@@ -319,6 +374,33 @@ const FeaturedNumbersList = ({
         </div>
         <div className="flex md:hidden items-center justify-center gap-2 mb-4 overflow-x-auto scrollbar-hide border border-gray-700/60 rounded-lg px-3 py-2">
           <button
+            type="button"
+            onClick={() => setSelectedNetwork(null)}
+            className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg font-medium transition-all whitespace-nowrap ${
+              selectedNetwork === null
+                ? "border-2 border-[#FFD700] text-white"
+                : "text-white"
+            }`}
+          >
+            <span>All</span>
+            {selectedNetwork === null && (
+              <svg
+                className="h-4 w-4 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            )}
+          </button>
+          <button
+            type="button"
             onClick={() => {
               if (selectedNetwork === "Jazz") {
                 setSelectedNetwork(null);
@@ -350,6 +432,7 @@ const FeaturedNumbersList = ({
             )}
           </button>
           <button
+            type="button"
             onClick={() => {
               if (selectedNetwork === "Zong") {
                 setSelectedNetwork(null);
@@ -366,6 +449,7 @@ const FeaturedNumbersList = ({
             Zong
           </button>
           <button
+            type="button"
             onClick={() => {
               if (selectedNetwork === "Ufone") {
                 setSelectedNetwork(null);
@@ -382,6 +466,7 @@ const FeaturedNumbersList = ({
             Ufone
           </button>
           <button
+            type="button"
             onClick={() => {
               if (selectedNetwork === "Telenor") {
                 setSelectedNetwork(null);

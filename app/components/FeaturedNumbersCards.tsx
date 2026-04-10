@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import { openWhatsApp, openDialer } from "./utils";
 
@@ -18,40 +18,132 @@ type FeaturedYellowCategoriesProps = {
   variant: "mobile" | "desktop";
 };
 
+const CATEGORY_SLIDE_INTERVAL_MS = 2800;
+
 const FeaturedYellowCardCategories = ({
   categories,
   variant,
 }: FeaturedYellowCategoriesProps) => {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const autoSlidePausedRef = useRef(false);
+  const categoryIdsKey = useMemo(
+    () => categories.map((c) => c._id).join(","),
+    [categories],
+  );
+
+  useEffect(() => {
+    if (categories.length <= 1) return;
+
+    const tick = (): void => {
+      if (autoSlidePausedRef.current) return;
+      const el = scrollerRef.current;
+      if (!el) return;
+
+      const pageW = el.clientWidth;
+      if (pageW <= 0) return;
+
+      const maxScrollLeft = el.scrollWidth - pageW;
+      if (maxScrollLeft <= 0) return;
+
+      const nextLeft = el.scrollLeft + pageW;
+      if (nextLeft >= maxScrollLeft - 2) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: pageW, behavior: "smooth" });
+      }
+    };
+
+    const id = window.setInterval(tick, CATEGORY_SLIDE_INTERVAL_MS);
+    return () => window.clearInterval(id);
+  }, [categories.length, categoryIdsKey]);
+
   if (!categories.length) return null;
+
+  const viewportClass =
+    variant === "mobile"
+      ? "scrollbar-hide mx-auto flex w-full max-w-[16rem] snap-x snap-mandatory flex-nowrap overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch]"
+      : "scrollbar-hide mx-auto flex w-full max-w-[18rem] snap-x snap-mandatory flex-nowrap overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch]";
+
   const chipClass =
     variant === "mobile"
-      ? "rounded-full border border-black/40 bg-black/[0.12] px-2 py-0.5 text-[11px] font-semibold leading-tight text-black"
-      : "rounded-full border border-black/40 bg-black/[0.12] px-2.5 py-0.5 text-xs font-semibold leading-tight text-black";
+      ? "inline-block max-w-[min(100%,14rem)] truncate rounded-full border border-black/40 bg-black/[0.12] px-3 py-1 text-center text-[11px] font-semibold leading-tight text-black"
+      : "inline-block max-w-[min(100%,16rem)] truncate rounded-full border border-black/40 bg-black/[0.12] px-3 py-1 text-center text-xs font-semibold leading-tight text-black";
+
   return (
-    <div
-      className="flex max-w-full flex-wrap justify-center gap-1.5 px-1"
-      aria-label="Categories"
-    >
-      {categories.map((cat) => (
-        <span key={cat._id} className={chipClass}>
-          {cat.name}
-        </span>
-      ))}
+    <div className="w-full max-w-full px-1" aria-label="Categories">
+      <div
+        ref={scrollerRef}
+        className={viewportClass}
+        onPointerEnter={() => {
+          autoSlidePausedRef.current = true;
+        }}
+        onPointerLeave={() => {
+          autoSlidePausedRef.current = false;
+        }}
+      >
+        {categories.map((cat) => (
+          <div
+            key={cat._id}
+            className="flex min-w-0 flex-[0_0_100%] snap-center snap-always items-center justify-center px-1 box-border"
+          >
+            <span className={chipClass}>{cat.name}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-/** Gold pill for price / Price On Call — same shape as Buy Now, gold fill for contrast on the card. */
+/** Price / POC control: dark pill + soft gold text — reads clearly on yellow cards. */
 const featuredPricePillBase =
-  "inline-flex items-center justify-center rounded-full border border-black/25 bg-gradient-to-b from-[#FFEB99] via-[#FFD700] to-[#E6AC00] font-bold text-black shadow-md ring-1 ring-black/10";
+  "inline-flex items-center justify-center rounded-full border border-white/12 bg-zinc-950/92 font-semibold text-[#f2e6a8] shadow-sm ring-1 ring-black/35 transition-colors duration-200";
 
-const featuredPricePillMobile = `${featuredPricePillBase} px-3 py-1.5 text-base`;
+const featuredPricePillMobile = `${featuredPricePillBase} px-3.5 py-1.5 text-sm`;
 
 const featuredPricePillMobilePoc = `${featuredPricePillBase} gap-1.5 px-3 py-1.5 text-xs`;
 
-const featuredPricePillDesktop = `${featuredPricePillBase} px-4 py-2 text-lg`;
+const featuredPricePillDesktop = `${featuredPricePillBase} px-5 py-2 text-base`;
 
 const featuredPricePillDesktopPoc = `${featuredPricePillBase} gap-2 px-4 py-2 text-sm`;
+
+const isDevelopment = process.env.NODE_ENV === "development";
+
+const MOCK_FEATURED_CARDS_FOR_LOCAL_PREVIEW: NumberCard[] = [
+  {
+    _id: "mock-featured-card-1",
+    number: "0303-0000888",
+    price: "Rs 50,000",
+    network: "Jazz",
+    limitedOffer: true,
+    categoryId: [
+      { _id: "mock-cat-ft-1", name: "Tetra-Tripple" },
+      { _id: "mock-cat-ft-2", name: "Tetra" },
+      { _id: "mock-cat-ft-3", name: "Easy to Remember" },
+      { _id: "mock-cat-ft-4", name: "Golden Numbers" },
+    ],
+  },
+  {
+    _id: "mock-featured-card-2",
+    number: "0321-7911111",
+    price: "Rs 125,000",
+    network: "Ufone",
+    categoryId: [
+      { _id: "mock-cat-ft-5", name: "Repeating Pair" },
+      { _id: "mock-cat-ft-6", name: "UAN" },
+      { _id: "mock-cat-ft-7", name: "Premium" },
+    ],
+  },
+  {
+    _id: "mock-featured-card-3",
+    number: "0300-2780000",
+    price: "Price On Call",
+    network: "Zong",
+    categoryId: [
+      { _id: "mock-cat-ft-8", name: "All Digit" },
+      { _id: "mock-cat-ft-9", name: "Platinum Numbers" },
+    ],
+  },
+];
 
 const getNetworkLogo = (network: string) => {
   const logos: Record<string, string> = {
@@ -83,13 +175,22 @@ const FeaturedNumbersCards = () => {
   );
   const [isPaused, setIsPaused] = useState(false);
   const originalScrollWidthRef = useRef<number>(0);
+  const displayFeaturedNumbers = useMemo(
+    () =>
+      featuredNumbers.length > 0
+        ? featuredNumbers
+        : isDevelopment
+          ? MOCK_FEATURED_CARDS_FOR_LOCAL_PREVIEW
+          : [],
+    [featuredNumbers],
+  );
 
   useEffect(() => {
     fetchFeaturedNumbers();
   }, []);
 
   useEffect(() => {
-    if (featuredNumbers.length === 0 || loading) return;
+    if (displayFeaturedNumbers.length === 0 || loading) return;
 
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
@@ -99,7 +200,8 @@ const FeaturedNumbersCards = () => {
       if (scrollContainerRef.current) {
         const firstSetWidth = scrollContainerRef.current.querySelector("div > div")?.getBoundingClientRect().width || 0;
         const gap = 16;
-        originalScrollWidthRef.current = (firstSetWidth + gap) * featuredNumbers.length;
+        originalScrollWidthRef.current =
+          (firstSetWidth + gap) * displayFeaturedNumbers.length;
       }
     }, 100);
 
@@ -121,7 +223,9 @@ const FeaturedNumbersCards = () => {
         const cardWidth = firstCard.getBoundingClientRect().width;
         const gap = 16; // gap-4 = 16px
         const scrollAmount = cardWidth + gap;
-        const originalWidth = originalScrollWidthRef.current || (cardWidth + gap) * featuredNumbers.length;
+        const originalWidth =
+          originalScrollWidthRef.current ||
+          (cardWidth + gap) * displayFeaturedNumbers.length;
 
         // Check if we've scrolled past the original set
         if (container.scrollLeft >= originalWidth - 10) {
@@ -140,10 +244,10 @@ const FeaturedNumbersCards = () => {
         clearInterval(scrollIntervalRef.current);
       }
     };
-  }, [featuredNumbers, loading, isPaused]);
+  }, [displayFeaturedNumbers.length, loading, isPaused]);
 
   useEffect(() => {
-    if (featuredNumbers.length === 0 || loading) return;
+    if (displayFeaturedNumbers.length === 0 || loading) return;
 
     const MOBILE_INTERVAL_MS = 3500;
     const clearMobileInterval = () => {
@@ -202,7 +306,7 @@ const FeaturedNumbersCards = () => {
       clearMobileInterval();
       mq.removeEventListener("change", onViewportChange);
     };
-  }, [featuredNumbers, loading, isPaused]);
+  }, [displayFeaturedNumbers.length, loading, isPaused]);
 
   const fetchFeaturedNumbers = async () => {
     try {
@@ -248,7 +352,7 @@ const FeaturedNumbersCards = () => {
     );
   }
 
-  if (featuredNumbers.length === 0) {
+  if (displayFeaturedNumbers.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className={sectionFrameClass}>
@@ -285,7 +389,7 @@ const FeaturedNumbersCards = () => {
           onPointerEnter={() => setIsPaused(true)}
           onPointerLeave={() => setIsPaused(false)}
         >
-          {featuredNumbers.map((item) => (
+          {displayFeaturedNumbers.map((item) => (
             <div
               key={item._id}
               data-featured-carousel-card
@@ -312,7 +416,7 @@ const FeaturedNumbersCards = () => {
                     <button
                       type="button"
                       onClick={() => openDialer()}
-                      className={`${featuredPricePillMobilePoc} transition-[filter] duration-300 hover:brightness-105`}
+                      className={`${featuredPricePillMobilePoc} hover:border-[#FFD700]/40 hover:bg-black hover:text-[#FFD700]`}
                     >
                       <svg
                         className="h-3.5 w-3.5 shrink-0"
@@ -363,7 +467,7 @@ const FeaturedNumbersCards = () => {
       >
         <div className="flex gap-4 sm:gap-6 pb-4">
           {/* Render original set */}
-          {featuredNumbers.map((item, index) => (
+          {displayFeaturedNumbers.map((item, index) => (
             <div
               key={`original-${item._id}-${index}`}
               className="group relative flex h-[200px] w-[280px] flex-shrink-0 cursor-pointer flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[218px] sm:w-[320px] sm:p-6 md:h-[224px] md:w-[370px]"
@@ -390,7 +494,7 @@ const FeaturedNumbersCards = () => {
                   <button
                     type="button"
                     onClick={() => openDialer()}
-                    className={`${featuredPricePillDesktopPoc} transition-[filter] duration-300 hover:brightness-105`}
+                    className={`${featuredPricePillDesktopPoc} hover:border-[#FFD700]/40 hover:bg-black hover:text-[#FFD700]`}
                   >
                     <svg
                       className="h-4 w-4 shrink-0"
@@ -430,7 +534,7 @@ const FeaturedNumbersCards = () => {
             </div>
           ))}
           {/* Duplicate set for infinite scroll */}
-          {featuredNumbers.map((item, index) => (
+          {displayFeaturedNumbers.map((item, index) => (
             <div
               key={`duplicate-${item._id}-${index}`}
               className="group relative flex h-[200px] w-[280px] flex-shrink-0 cursor-pointer flex-col rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] p-4 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[218px] sm:w-[320px] sm:p-6 md:h-[224px] md:w-[370px]"
@@ -457,7 +561,7 @@ const FeaturedNumbersCards = () => {
                   <button
                     type="button"
                     onClick={() => openDialer()}
-                    className={`${featuredPricePillDesktopPoc} transition-[filter] duration-300 hover:brightness-105`}
+                    className={`${featuredPricePillDesktopPoc} hover:border-[#FFD700]/40 hover:bg-black hover:text-[#FFD700]`}
                   >
                     <svg
                       className="h-4 w-4 shrink-0"

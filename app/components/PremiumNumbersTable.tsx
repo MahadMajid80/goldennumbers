@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { openWhatsApp, openDialer } from "./utils";
-import { playHorizontalScrollHint } from "../../helpers/playHorizontalScrollHint";
 
 type PremiumNumber = {
   _id: string;
@@ -62,48 +61,48 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
       className="pointer-events-none absolute right-0 top-0 h-full w-px bg-gradient-to-b from-[#FFD700] via-[#d4af37] to-[#8a7020] opacity-90"
       aria-hidden
     />
-    <div
-      data-premium-card-inner-scroll
-      className="scrollbar-hide flex min-w-0 items-center gap-3 overflow-x-auto p-4 [-webkit-overflow-scrolling:touch] sm:gap-4 sm:p-5 sm:pr-6"
-    >
-      <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-gray-700/50 bg-black/35 sm:h-14 sm:w-14">
-        <Image
-          src={getNetworkLogo(num.network)}
-          alt={num.network}
-          width={72}
-          height={36}
-          className="h-7 w-auto max-w-[2.75rem] object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 sm:max-w-[3.25rem]"
-        />
-        {num.network === "Ufone" && (
-          <span className="mt-0.5 max-w-[3rem] truncate text-[8px] uppercase leading-none text-gray-500">
-            all about u
-          </span>
-        )}
+    <div className="flex flex-col gap-4 p-4 sm:p-5">
+      <div className="flex gap-3 sm:gap-4">
+        <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-gray-700/50 bg-black/35 sm:h-14 sm:w-14">
+          <Image
+            src={getNetworkLogo(num.network)}
+            alt={num.network}
+            width={72}
+            height={36}
+            className="h-7 w-auto max-w-[2.75rem] object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 sm:max-w-[3.25rem]"
+          />
+          {num.network === "Ufone" && (
+            <span className="mt-0.5 max-w-[3rem] truncate text-[8px] uppercase leading-none text-gray-500">
+              all about u
+            </span>
+          )}
+        </div>
+
+        <div className="min-w-0 flex-1 space-y-2">
+          <p className="text-lg font-bold tracking-tight text-[#e6c84a] sm:text-xl md:text-2xl break-words">
+            {num.number}
+          </p>
+          {num.categoryId && num.categoryId.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {num.categoryId.map((cat) => (
+                <span
+                  key={cat._id}
+                  className="inline-flex max-w-full rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:text-[11px]"
+                >
+                  <span className="break-words text-left">{cat.name}</span>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <p className="shrink-0 text-lg font-bold tracking-tight text-[#e6c84a] sm:text-xl md:text-2xl">
-        {num.number}
-      </p>
-
-      {num.categoryId && num.categoryId.length > 0 && (
-        <div className="flex shrink-0 flex-nowrap items-center gap-1.5">
-          {num.categoryId.map((cat) => (
-            <span
-              key={cat._id}
-              className="inline-flex shrink-0 rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:text-[11px]"
-            >
-              {cat.name}
-            </span>
-          ))}
-        </div>
-      )}
-
-      <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+      <div className="flex flex-wrap items-center gap-2 border-t border-gray-700/50 pt-3 sm:gap-3 sm:pl-[calc(3.5rem+1rem)] sm:pt-3">
         {num.price === "Price On Call" ? (
           <button
             type="button"
             onClick={() => openDialer()}
-            className="inline-flex items-center gap-1.5 rounded-full border border-zinc-600 bg-zinc-950 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:border-[#FFD700]/40 hover:bg-zinc-900 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-600 bg-zinc-950 px-3 py-2 text-xs font-semibold text-white transition-colors hover:border-[#FFD700]/40 hover:bg-zinc-900 sm:w-auto sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
           >
             <svg
               className="h-3.5 w-3.5 shrink-0 opacity-90 sm:h-4 sm:w-4"
@@ -121,18 +120,18 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
             Price On Call
           </button>
         ) : (
-          <>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
             <button
               type="button"
               onClick={openWhatsApp}
-              className="rounded-full bg-[#c9a227] px-3 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-[#d4af37] sm:px-4 sm:py-2 sm:text-sm"
+              className="w-full rounded-full bg-[#c9a227] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] sm:w-auto"
             >
               Buy Now
             </button>
-            <span className="text-sm font-medium text-gray-400 sm:text-base">
+            <span className="text-center text-sm font-medium text-gray-400 sm:text-left sm:text-base">
               {num.price}
             </span>
-          </>
+          </div>
         )}
       </div>
     </div>
@@ -142,11 +141,6 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
 const PremiumNumbersTable = () => {
   const [premiumNumbers, setPremiumNumbers] = useState<PremiumNumber[]>([]);
   const [loading, setLoading] = useState(true);
-  const premiumNumbersBlockRef = useRef<HTMLDivElement>(null);
-  const hasPlayedPremiumInnerHintRef = useRef(false);
-  const premiumInnerHintHandlesRef = useRef<Array<{ cancel: () => void }>>(
-    [],
-  );
 
   const displayNumbers = useMemo(
     () =>
@@ -187,62 +181,6 @@ const PremiumNumbersTable = () => {
   useEffect(() => {
     fetchPremiumNumbers();
   }, []);
-
-  useEffect(() => {
-    if (loading || displayNumbers.length === 0) return;
-
-    const blockEl = premiumNumbersBlockRef.current;
-    if (!blockEl) return;
-
-    let teardown = false;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry?.isIntersecting || hasPlayedPremiumInnerHintRef.current) {
-          return;
-        }
-
-        const playHints = (): void => {
-          if (teardown) return;
-          hasPlayedPremiumInnerHintRef.current = true;
-          premiumInnerHintHandlesRef.current.forEach((h) => h.cancel());
-          premiumInnerHintHandlesRef.current = [];
-
-          const nodes = blockEl.querySelectorAll<HTMLElement>(
-            "[data-premium-card-inner-scroll]",
-          );
-
-          nodes.forEach((node, index) => {
-            const maxScroll = node.scrollWidth - node.clientWidth;
-            if (maxScroll <= 0) return;
-
-            const handle = playHorizontalScrollHint(node, {
-              delayMs: 400 + index * 45,
-              durationMs: 2400,
-            });
-            premiumInnerHintHandlesRef.current.push(handle);
-          });
-        };
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(playHints);
-        });
-
-        observer.disconnect();
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" },
-    );
-
-    observer.observe(blockEl);
-
-    return () => {
-      teardown = true;
-      observer.disconnect();
-      premiumInnerHintHandlesRef.current.forEach((h) => h.cancel());
-      premiumInnerHintHandlesRef.current = [];
-    };
-  }, [loading, displayNumbers.length]);
 
   const showingLocalPreview =
     isDevelopment &&
@@ -296,7 +234,7 @@ const PremiumNumbersTable = () => {
             No premium numbers available
           </div>
         ) : (
-          <div ref={premiumNumbersBlockRef}>
+          <div>
             {displayNumbers.length > 8 ? (
               <div
                 className="max-h-[500px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-[450px]"

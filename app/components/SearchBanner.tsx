@@ -150,13 +150,13 @@ const SearchBanner = ({
 
   return (
     <div className="container mx-auto px-4 pt-2 pb-2">
-      <div className="bg-gray-800 rounded-lg shadow-lg flex items-center border border-gray-700 relative overflow-visible">
+      <div
+        className="bg-gray-800 rounded-lg shadow-lg flex items-center border border-gray-700 relative overflow-visible"
+        ref={searchDropdownRef}
+      >
         <div className="flex-1 flex items-center md:divide-x divide-gray-700">
           {/* Search Input - Always visible */}
-          <div
-            className="relative flex-1 px-4 py-3 z-50"
-            ref={searchDropdownRef}
-          >
+          <div className="relative flex-1 px-4 py-3 z-50">
             <input
               type="text"
               placeholder="Search your dream number"
@@ -172,32 +172,6 @@ const SearchBanner = ({
               }}
               className="w-full bg-transparent text-white placeholder-gray-400 focus:outline-none"
             />
-            {showSearchDropdown && searchSuggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border-2 border-gray-600 rounded-lg shadow-2xl z-[100] max-h-60 overflow-y-auto">
-                {searchSuggestions.map((suggestion) => (
-                  <button
-                    key={suggestion._id}
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSearchTerm(suggestion.number);
-                      setShowSearchDropdown(false);
-                    }}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-700 text-white transition-colors block border-b border-gray-700 last:border-b-0"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold">{suggestion.number}</span>
-                      <span className="text-gray-400 text-sm">
-                        {suggestion.price}
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {suggestion.network}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* Network Filter - Hidden on mobile */}
@@ -558,6 +532,33 @@ const SearchBanner = ({
             />
           </svg>
         </button>
+
+        {showSearchDropdown && searchSuggestions.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border-2 border-gray-600 rounded-lg shadow-2xl z-[100] max-h-60 overflow-y-auto">
+            {searchSuggestions.map((suggestion) => (
+              <button
+                key={suggestion._id}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSearchTerm(suggestion.number);
+                  setShowSearchDropdown(false);
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-gray-700 text-white transition-colors block border-b border-gray-700 last:border-b-0"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold">{suggestion.number}</span>
+                  <span className="text-gray-400 text-sm">
+                    {suggestion.price}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {suggestion.network}
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Mobile Filters Dropdown */}
