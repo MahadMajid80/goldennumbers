@@ -24,6 +24,7 @@ const networks: readonly { id: NetworkId; label: string }[] = [
   { id: "Zong", label: "Zong" },
   { id: "Ufone", label: "Ufone" },
   { id: "Telenor", label: "Telenor" },
+  { id: "Warid", label: "Warid" },
 ] as const;
 
 type CategoryApiItem = {
@@ -382,7 +383,7 @@ const BrowseNumbers = () => {
 
         {activeTab === "network" && (
           <>
-            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+            <div className="mb-6 grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
               {networks.map((net) => {
                 const isSelected = selectedNetwork === net.id;
                 return (

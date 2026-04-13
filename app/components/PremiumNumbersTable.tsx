@@ -46,7 +46,7 @@ const getNetworkLogo = (network: string) => {
   };
   return logos[network] || "/jazz-logo.png";
 };
- 
+
 type PremiumNumberCardProps = {
   num: PremiumNumber;
   index: number;
@@ -54,27 +54,30 @@ type PremiumNumberCardProps = {
 
 const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
   <div
-    className="group relative overflow-hidden rounded-2xl border border-gray-700/60 bg-gradient-to-br from-[#0f1419] via-[#151b24] to-[#0c1016] shadow-lg transition-all duration-300 hover:border-[#FFD700]/35 hover:shadow-[0_12px_40px_-12px_rgba(255,215,0,0.18)]"
+    className="group relative h-full min-h-0 min-w-0 w-full overflow-hidden rounded-2xl border border-gray-700/60 bg-gradient-to-br from-[#0f1419] via-[#151b24] to-[#0c1016] shadow-lg transition-all duration-300 hover:border-[#FFD700]/35 hover:shadow-[0_12px_40px_-12px_rgba(255,215,0,0.18)]"
     style={{ animationDelay: `${index * 80}ms` }}
   >
     <div
       className="pointer-events-none absolute right-0 top-0 h-full w-px bg-gradient-to-b from-[#FFD700] via-[#d4af37] to-[#8a7020] opacity-90"
       aria-hidden
     />
-    <div className="flex flex-col gap-4 p-4 sm:p-5">
-      <div className="flex gap-3 sm:gap-4">
-        <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-gray-700/50 bg-black/35 sm:h-14 sm:w-14">
-          <Image
-            src={getNetworkLogo(num.network)}
-            alt={num.network}
-            width={72}
-            height={36}
-            className="h-7 w-auto max-w-[2.75rem] object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 sm:max-w-[3.25rem]"
-          />
+    <div className="flex h-full min-h-0 w-full flex-col gap-4 p-4 sm:p-5 md:flex-row md:items-stretch md:gap-5 lg:gap-6">
+      {/* Mobile: logo + number/categories in one row; desktop: that block grows as middle column */}
+      <div className="flex min-w-0 flex-1 gap-3 sm:gap-4">
+        <div className="flex shrink-0 flex-col items-center justify-start pt-0.5">
+          <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-gray-700/50 bg-black/35 sm:h-14 sm:w-14">
+            <Image
+              src={getNetworkLogo(num.network)}
+              alt={num.network}
+              width={72}
+              height={36}
+              className="h-7 w-auto max-w-[2.75rem] object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 sm:max-w-[3.25rem]"
+            />
+          </div>
         </div>
 
-        <div className="min-w-0 flex-1 space-y-2">
-          <p className="text-lg font-bold tracking-tight text-[#e6c84a] sm:text-xl md:text-2xl break-words">
+        <div className="min-w-0 flex-1 space-y-2 md:py-0.5">
+          <p className="text-lg font-bold tracking-tight text-[#e6c84a] sm:text-xl md:text-2xl lg:text-[1.65rem] break-words">
             {num.number}
           </p>
           {num.categoryId && num.categoryId.length > 0 && (
@@ -89,7 +92,7 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
                     key={cat._id}
                     role="listitem"
                     title={cat.name}
-                    className="inline-block max-w-[11rem] shrink-0 truncate rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-left align-middle text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:max-w-[13rem] sm:text-[11px]"
+                    className="inline-block max-w-[11rem] shrink-0 truncate rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-left align-middle text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:max-w-[13rem] sm:text-[11px] md:text-xs"
                   >
                     {cat.name}
                   </span>
@@ -100,12 +103,13 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-gray-700/50 pt-3 sm:gap-3 sm:pl-[calc(3.5rem+1rem)] sm:pt-3">
+      {/* Actions — full width under content on mobile; right rail on md+ */}
+      <div className="flex flex-col justify-center gap-2 border-t border-gray-700/50 pt-3 md:w-[12rem] md:shrink-0 md:border-t-0 md:border-l md:border-gray-700/50 md:pl-5 md:pt-0 lg:w-[13rem] lg:pl-6">
         {num.price === "Price On Call" ? (
           <button
             type="button"
             onClick={() => openDialer()}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#c9a227] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] sm:w-auto sm:gap-2"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#c9a227] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] md:py-2.5"
           >
             <svg
               className="h-4 w-4 shrink-0"
@@ -123,18 +127,24 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
             Price On Call
           </button>
         ) : (
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+          <>
+            <p
+              className="hidden w-full max-w-full truncate text-center text-base font-semibold leading-snug text-[#e6c84a] md:block lg:text-lg"
+              title={num.price}
+            >
+              {num.price}
+            </p>
             <button
               type="button"
               onClick={openWhatsApp}
-              className="w-full rounded-full bg-[#c9a227] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] sm:w-auto"
+              className="w-full rounded-full bg-[#c9a227] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] md:py-2.5"
             >
               Buy Now
             </button>
-            <span className="text-center text-sm font-medium text-gray-400 sm:text-left sm:text-base">
+            <p className="text-center text-sm font-medium text-gray-400 md:hidden">
               {num.price}
-            </span>
-          </div>
+            </p>
+          </>
         )}
       </div>
     </div>
@@ -158,17 +168,29 @@ const PremiumNumbersTable = () => {
   const fetchPremiumNumbers = async () => {
     try {
       const response = await fetch("/api/numbers?premiumNumber=true");
-      
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
-        console.error("Error fetching premium numbers:", errorData.error, errorData.details ? `Details: ${errorData.details}` : "");
+        const errorData = await response
+          .json()
+          .catch(() => ({
+            error: `HTTP ${response.status}: ${response.statusText}`,
+          }));
+        console.error(
+          "Error fetching premium numbers:",
+          errorData.error,
+          errorData.details ? `Details: ${errorData.details}` : "",
+        );
         setPremiumNumbers([]);
         return;
       }
 
       const data = await response.json();
       if (data.error) {
-        console.error("Error fetching premium numbers:", data.error, data.details ? `Details: ${data.details}` : "");
+        console.error(
+          "Error fetching premium numbers:",
+          data.error,
+          data.details ? `Details: ${data.details}` : "",
+        );
         setPremiumNumbers([]);
       } else {
         setPremiumNumbers(Array.isArray(data) ? data : []);
@@ -186,9 +208,7 @@ const PremiumNumbersTable = () => {
   }, []);
 
   const showingLocalPreview =
-    isDevelopment &&
-    premiumNumbers.length === 0 &&
-    displayNumbers.length > 0;
+    isDevelopment && premiumNumbers.length === 0 && displayNumbers.length > 0;
 
   const premiumSectionFrameClass =
     "rounded-xl border border-[#FFD700]/45 bg-zinc-950/25 p-4 shadow-[inset_0_1px_0_0_rgba(255,215,0,0.06)] md:p-6";
@@ -227,8 +247,8 @@ const PremiumNumbersTable = () => {
 
         {showingLocalPreview && (
           <p className="mb-4 text-center text-xs text-gray-500">
-            Local preview — mock tiles; real data appears when premium numbers exist in
-            the database.
+            Local preview — mock tiles; real data appears when premium numbers
+            exist in the database.
           </p>
         )}
 
@@ -237,23 +257,23 @@ const PremiumNumbersTable = () => {
             No premium numbers available
           </div>
         ) : (
-          <div>
+          <div className="w-full">
             {displayNumbers.length > 8 ? (
               <div
-                className="max-h-[500px] overflow-y-auto overflow-x-hidden pr-2 md:max-h-[450px]"
+                className="max-h-[500px] w-full overflow-y-auto overflow-x-hidden pr-2 md:max-h-[450px]"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#4B5563 #1F2937",
                 }}
               >
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+                <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
                   {displayNumbers.map((num, index) => (
                     <PremiumNumberCard key={num._id} num={num} index={index} />
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+              <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
                 {displayNumbers.map((num, index) => (
                   <PremiumNumberCard key={num._id} num={num} index={index} />
                 ))}
