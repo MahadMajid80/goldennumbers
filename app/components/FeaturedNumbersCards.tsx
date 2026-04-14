@@ -104,9 +104,9 @@ const featuredPricePillMobile = `${featuredPricePillBase} px-4 py-2 text-sm`;
 const featuredPricePillMobilePoc = `${featuredPricePillBase} gap-1.5 px-4 py-2 text-xs`;
 
 /** Match desktop Buy Now: `px-3 py-2 text-xs sm:px-4 sm:text-sm` */
-const featuredPricePillDesktop = `${featuredPricePillBase} px-3 py-2 text-xs sm:px-4 sm:text-sm`;
+const featuredPricePillDesktop = `${featuredPricePillBase} px-2.5 py-1.5 text-[11px] sm:px-3 sm:py-2 sm:text-xs`;
 
-const featuredPricePillDesktopPoc = `${featuredPricePillBase} gap-2 px-3 py-2 text-xs sm:px-4 sm:text-sm`;
+const featuredPricePillDesktopPoc = `${featuredPricePillBase} gap-1.5 px-2.5 py-1.5 text-[11px] sm:gap-2 sm:px-3 sm:py-2 sm:text-xs`;
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -165,7 +165,7 @@ const isMobileViewport = (): boolean =>
   window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`).matches;
 
 const featuredDesktopCardShell =
-  "group relative flex h-[228px] w-[280px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[240px] sm:w-[320px] md:h-[248px] md:w-[380px]";
+  "group relative flex h-[228px] w-[280px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFB800] via-[#FFD700] to-[#FFB800] shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:h-[240px] sm:w-[320px] md:h-[224px] md:w-[380px]";
 
 type FeaturedDesktopNumberCardProps = { item: NumberCard };
 
@@ -207,7 +207,7 @@ const FeaturedDesktopNumberCard = ({ item }: FeaturedDesktopNumberCardProps) => 
         <button
           type="button"
           onClick={openWhatsApp}
-          className="shrink-0 rounded-full bg-black px-3 py-2 text-xs font-semibold text-white transition-colors duration-300 hover:bg-gray-800 sm:px-4 sm:text-sm"
+          className="shrink-0 rounded-full bg-black px-2.5 py-1.5 text-[11px] font-semibold text-white transition-colors duration-300 hover:bg-gray-800 sm:px-3 sm:py-2 sm:text-xs"
         >
           Buy Now
         </button>
