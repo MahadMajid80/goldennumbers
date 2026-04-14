@@ -61,9 +61,9 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
       className="pointer-events-none absolute right-0 top-0 h-full w-px bg-gradient-to-b from-[#FFD700] via-[#d4af37] to-[#8a7020] opacity-90"
       aria-hidden
     />
-    <div className="flex h-full min-h-0 w-full flex-col gap-4 p-4 sm:p-5 md:flex-row md:items-stretch md:gap-5 lg:gap-6">
-      {/* Mobile: logo + number/categories in one row; desktop: that block grows as middle column */}
-      <div className="flex min-w-0 flex-1 gap-3 sm:gap-4">
+    <div className="flex h-full min-h-0 w-full items-stretch gap-3 p-4 sm:gap-4 sm:p-5 md:gap-5 lg:gap-6">
+      {/* Unified layout (mobile + desktop): content column on left, action rail on right */}
+      <div className="flex min-w-0 flex-[1_1_67%] gap-2.5 sm:flex-1 sm:gap-4">
         <div className="flex shrink-0 flex-col items-center justify-start pt-0.5">
           <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-gray-700/50 bg-black/35 sm:h-14 sm:w-14">
             <Image
@@ -76,8 +76,8 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
           </div>
         </div>
 
-        <div className="min-w-0 flex-1 space-y-2 md:py-0.5">
-          <p className="text-lg font-bold tracking-tight text-[#e6c84a] sm:text-xl md:text-2xl lg:text-[1.65rem] break-words">
+        <div className="min-w-0 flex-1 space-y-2 py-0.5">
+          <p className="text-base font-bold tracking-tight text-[#e6c84a] sm:text-xl md:text-2xl lg:text-[1.65rem] break-words">
             {num.number}
           </p>
           {num.categoryId && num.categoryId.length > 0 && (
@@ -92,7 +92,7 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
                     key={cat._id}
                     role="listitem"
                     title={cat.name}
-                    className="inline-block max-w-[11rem] shrink-0 truncate rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-left align-middle text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:max-w-[13rem] sm:text-[11px] md:text-xs"
+                    className="inline-block max-w-[9rem] shrink-0 truncate rounded-md border border-[#FFD700]/25 bg-[#FFD700]/10 px-2 py-0.5 text-left align-middle text-[10px] font-semibold leading-snug text-[#e8cf6a] sm:max-w-[13rem] sm:text-[11px] md:text-xs"
                   >
                     {cat.name}
                   </span>
@@ -103,13 +103,13 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
         </div>
       </div>
 
-      {/* Actions — full width under content on mobile; right rail on md+ */}
-      <div className="flex flex-col justify-center gap-2 border-t border-gray-700/50 pt-3 md:w-[12rem] md:shrink-0 md:border-t-0 md:border-l md:border-gray-700/50 md:pl-5 md:pt-0 lg:w-[13rem] lg:pl-6">
+      {/* Desktop-style action rail on all breakpoints */}
+      <div className="flex w-[7.6rem] shrink-0 flex-col justify-center gap-2 border-l border-gray-700/50 pl-2.5 sm:w-[11.5rem] sm:pl-4 md:w-[12rem] md:pl-5 lg:w-[13rem] lg:pl-6">
         {num.price === "Price On Call" ? (
           <button
             type="button"
             onClick={() => openDialer()}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-[#c9a227] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] md:py-2.5"
+            className="inline-flex w-full items-center justify-center gap-1 rounded-full bg-[#c9a227] px-2.5 py-2 text-[11px] font-semibold text-black transition-colors hover:bg-[#d4af37] sm:gap-1.5 sm:px-4 sm:py-2.5 sm:text-sm"
           >
             <svg
               className="h-4 w-4 shrink-0"
@@ -129,7 +129,7 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
         ) : (
           <>
             <p
-              className="hidden w-full max-w-full truncate text-center text-base font-semibold leading-snug text-[#e6c84a] md:block lg:text-lg"
+              className="w-full max-w-full truncate text-center text-xs font-semibold leading-snug text-[#e6c84a] sm:text-base lg:text-lg"
               title={num.price}
             >
               {num.price}
@@ -137,13 +137,10 @@ const PremiumNumberCard = ({ num, index }: PremiumNumberCardProps) => (
             <button
               type="button"
               onClick={openWhatsApp}
-              className="w-full rounded-full bg-[#c9a227] px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[#d4af37] md:py-2.5"
+              className="w-full rounded-full bg-[#c9a227] px-2.5 py-2 text-[11px] font-semibold text-black transition-colors hover:bg-[#d4af37] sm:px-4 sm:py-2.5 sm:text-sm"
             >
               Buy Now
             </button>
-            <p className="text-center text-sm font-medium text-gray-400 md:hidden">
-              {num.price}
-            </p>
           </>
         )}
       </div>
