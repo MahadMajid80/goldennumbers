@@ -9,6 +9,7 @@ import FeaturedNumbersCards from "./components/FeaturedNumbersCards";
 import FeaturedNumbersStrip from "./components/FeaturedNumbersStrip";
 import BrowseNumbers from "./components/BrowseNumbers";
 import PremiumNumbersTable from "./components/PremiumNumbersTable";
+import ChooseYourNumberSection from "./components/ChooseYourNumberSection";
 import InfoSections from "./components/InfoSections";
 import Footer from "./components/Footer";
 
@@ -73,6 +74,7 @@ export default function Home() {
               <FeaturedNumbersStrip />
               <FeaturedNumbersCards />
               <PremiumNumbersTable />
+              <ChooseYourNumberSection />
               <BrowseNumbers />
               <InfoSections />
             </div>
