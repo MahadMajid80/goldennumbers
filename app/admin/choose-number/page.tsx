@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-type NumberMaskMode = "none" | "middle3" | "last3";
+type NumberMaskMode = "none" | "middle3" | "last3" | "last7";
 
 type ChooseNumberSettingsResponse = {
   discountPercentage: number;
@@ -162,6 +162,7 @@ const ChooseNumberSettingsPage = () => {
               <option value="none">Do not mask (show full number)</option>
               <option value="middle3">Hide middle 3 digits (0300***0000)</option>
               <option value="last3">Hide last 3 digits (03000000***)</option>
+              <option value="last7">Hide last 7 digits (0300*******)</option>
             </select>
           </label>
         </div>

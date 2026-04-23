@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
 
-export type NumberMaskMode = "none" | "middle3" | "last3";
+export type NumberMaskMode = "none" | "middle3" | "last3" | "last7";
 
 export interface IChooseNumberSettings {
   discountPercentage: number;
@@ -21,7 +21,7 @@ const ChooseNumberSettingsSchema = new Schema<IChooseNumberSettings>(
     },
     maskMode: {
       type: String,
-      enum: ["none", "middle3", "last3"],
+      enum: ["none", "middle3", "last3", "last7"],
       required: true,
       default: "none",
     },

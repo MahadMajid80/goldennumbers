@@ -413,7 +413,9 @@ const ChooseYourNumberSection = () => {
             {searchLoading && (
               <div className="mt-5">
                 <div className="mb-3 flex items-center justify-between gap-3">
-                  <p className="text-sm text-gray-300">Searching available numbers…</p>
+                  <p className="text-sm text-gray-300">
+                    Searching available numbers…
+                  </p>
                   <div
                     className="h-4 w-4 animate-spin rounded-full border-2 border-[#FFD700]/70 border-t-transparent"
                     aria-label="Loading"

@@ -17,7 +17,10 @@ const DEFAULT_SETTINGS: ChooseNumberSettingsPayload = {
 };
 
 const isValidMaskMode = (value: unknown): value is NumberMaskMode =>
-  value === "none" || value === "middle3" || value === "last3";
+  value === "none" ||
+  value === "middle3" ||
+  value === "last3" ||
+  value === "last7";
 
 const sanitizeDiscountPercentage = (value: unknown): number | null => {
   if (typeof value !== "number" || !Number.isFinite(value)) return null;
@@ -96,7 +99,7 @@ export async function PUT(request: Request) {
       {
         discountPercentage,
         maskMode: payload.maskMode,
-        updatedBy: session.user.email ?? session.user.name ?? "admin",
+        updatedBy: session.user.email ?? session.user.id ?? "admin",
       },
       {
         upsert: true,
