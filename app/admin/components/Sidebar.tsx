@@ -9,6 +9,7 @@ const Sidebar = () => {
   const menuItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
     { href: "/admin/numbers", label: "Numbers", icon: "📱" },
+    { href: "/admin/choose-number", label: "Choose Number", icon: "🎯" },
     { href: "/admin/categories", label: "Categories", icon: "📂" },
     { href: "/admin/settings", label: "Settings", icon: "⚙️" },
   ];
